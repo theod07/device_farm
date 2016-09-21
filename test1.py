@@ -3,10 +3,13 @@ Create a simple test that will open Appium Webdriver and visit www.google.com
 """
 
 # iOS environment
-from appium import webdriver
-from unittest.TestCase import assertEqual
+# from appium import webdriver
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+# from unittest.Testcase import assertEqual
 import time
 import os
+import pdb
 
 # class LoginTests(unittest.TestCase):
 #     def setUp(self):
@@ -32,13 +35,54 @@ capabilities = { 'browserName': 'Safari' }
 driver = webdriver.Remote('http://localhost:4723/wd/hub', capabilities)
 
 # Navigate to the page and interact with the elements on the guinea-pig page using id.
-driver.get('http://saucelabs.com/test/guinea-pig');
-div = driver.find_element_by_id('i_am_an_id')
+driver.get('http://saucelabs.com/test/guinea-pig')
+
+# navigate to solvhealth.com
+driver.get("http://www.solvhealth.com")
+
+# enter credentials
+alert = driver.switch_to_alert()
+alert.send_keys('quick')
+alert.send_keys(Keys.RETURN + 'solv')
+alert.send_keys(Keys.RETURN + Keys.RETURN)
+
+# page 1, click arrow
+time.sleep(.5)
+elem = driver.find_element_by_class_name('_34eC')
+elem.click()
+
+# page 2, click arrow
+time.sleep(.5)
+elem = driver.find_element_by_class_name('_34eC')
+elem.click()
+
+# click button "Set my location" 
+time.sleep(.5)
+elem = driver.find_element_by_class_name('_3y2m')
+elem.click()
+
+
+# allow location
+alert = driver.switch_to_alert()
+alert.accept()
+alert = driver.switch_to_alert()
+alert.accept()
+
+pdb.set_trace()
+# select text box & enter text
+elem = driver.find_element_by_class_name('geosuggest__input _1UWd')
+elem.send_keys('Dallas, TX' + Keys.ENTER)
+
+
+
+
+
+# div = driver.find_element_by_id('i_am_an_id')
 # check the text retrieved matches expected value
-assertEqual('I am a div', div.text)
+# assertEqual('I am a div', div.text)
 
 # populate the comments field by id
-driver.find_element_by_id('comments').send_keys('My comment')
+# driver.find_element_by_id('comments').send_keys('My comment')
 
 # close the driver
 driver.quit()
