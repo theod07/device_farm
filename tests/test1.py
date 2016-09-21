@@ -39,23 +39,24 @@ driver.get('http://saucelabs.com/test/guinea-pig')
 
 # navigate to solvhealth.com
 driver.get("http://www.solvhealth.com")
+driver.switch_to_alert().accept()
 
 # enter credentials
 alert = driver.switch_to_alert()
 alert.send_keys('quick' + Keys.RETURN + 'solv' + Keys.RETURN)
 
 # page 1, click arrow
-time.sleep(1.2)
+time.sleep(1.5)
 elem = driver.find_element_by_class_name('_34eC')
 elem.click()
 
 # page 2, click arrow
-time.sleep(1.2)
+time.sleep(1.5)
 elem = driver.find_element_by_class_name('_34eC')
 elem.click()
 
 # click button "Set my location" 
-time.sleep(1.2)
+time.sleep(1.5)
 elem = driver.find_element_by_css_selector('input[value="Set my location"]')
 # elem = driver.find_element_by_class_name('_3y2m')
 elem.click()
@@ -68,6 +69,7 @@ alert = driver.switch_to_alert()
 alert.accept()
 
 # select text box & enter text
+time.sleep(1.5)
 elem = driver.find_element_by_class_name('geosuggest__input')
 elem.send_keys('Dallas, TX' + Keys.ENTER)
 
@@ -77,11 +79,13 @@ elem.send_keys('back pain' + Keys.ENTER)
 
 
 # click "book"
+time.sleep(5)
 driver.find_element_by_link_text('Book').click()
 
 # click "change"
 
 # click "next"
+time.sleep(1.5)
 driver.find_element_by_class_name('_2u1X').click()
 
 # fill form
@@ -95,11 +99,21 @@ elem = driver.find_element_by_id('phone')
 elem.send_keys('7148236827')
 elem = driver.find_element_by_id('notes')
 elem.send_keys('testing')
-elem = driver.find_element_by_link_text('Next')
+time.sleep(1.5)
+elem = driver.find_element_by_class_name('_1RVK')
+elem.click()
+
+# flow branches here for insurance
+# No. I know I'm covered or will check at clinic
+elem = driver.find_element_by_class_name('_2fkl')
+elem.click()
+
+# click finalize
+time.sleep(1.5)
+elem = driver.find_element_by_class_name('_1lJn')
+elem.click()
 
 pdb.set_trace()
-# flow branches here for insurance
-
 
 # div = driver.find_element_by_id('i_am_an_id')
 # check the text retrieved matches expected value
