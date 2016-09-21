@@ -9,7 +9,7 @@ from selenium.webdriver.common.keys import Keys
 # from unittest.Testcase import assertEqual
 import time
 import os
-import pdb
+import ipdb as pdb
 
 # class LoginTests(unittest.TestCase):
 #     def setUp(self):
@@ -42,23 +42,22 @@ driver.get("http://www.solvhealth.com")
 
 # enter credentials
 alert = driver.switch_to_alert()
-alert.send_keys('quick')
-alert.send_keys(Keys.RETURN + 'solv')
-alert.send_keys(Keys.RETURN + Keys.RETURN)
+alert.send_keys('quick' + Keys.RETURN + 'solv' + Keys.RETURN)
 
 # page 1, click arrow
-time.sleep(.5)
+time.sleep(1.2)
 elem = driver.find_element_by_class_name('_34eC')
 elem.click()
 
 # page 2, click arrow
-time.sleep(.5)
+time.sleep(1.2)
 elem = driver.find_element_by_class_name('_34eC')
 elem.click()
 
 # click button "Set my location" 
-time.sleep(.5)
-elem = driver.find_element_by_class_name('_3y2m')
+time.sleep(1.2)
+elem = driver.find_element_by_css_selector('input[value="Set my location"]')
+# elem = driver.find_element_by_class_name('_3y2m')
 elem.click()
 
 
@@ -68,13 +67,38 @@ alert.accept()
 alert = driver.switch_to_alert()
 alert.accept()
 
-pdb.set_trace()
 # select text box & enter text
-elem = driver.find_element_by_class_name('geosuggest__input _1UWd')
+elem = driver.find_element_by_class_name('geosuggest__input')
 elem.send_keys('Dallas, TX' + Keys.ENTER)
 
+# enter symptoms
+elem = driver.find_element_by_id('symptoms')
+elem.send_keys('back pain' + Keys.ENTER)
 
 
+# click "book"
+driver.find_element_by_link_text('Book').click()
+
+# click "change"
+
+# click "next"
+driver.find_element_by_class_name('_2u1X').click()
+
+# fill form
+elem = driver.find_element_by_id('firstName')
+elem.send_keys('theo')
+elem = driver.find_element_by_id('lastName')
+elem.send_keys('do')
+elem = driver.find_element_by_id('email')
+elem.send_keys('theo@solvhealth.com')
+elem = driver.find_element_by_id('phone')
+elem.send_keys('7148236827')
+elem = driver.find_element_by_id('notes')
+elem.send_keys('testing')
+elem = driver.find_element_by_link_text('Next')
+
+pdb.set_trace()
+# flow branches here for insurance
 
 
 # div = driver.find_element_by_id('i_am_an_id')
