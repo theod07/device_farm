@@ -3,24 +3,31 @@ Create a simple test that will open Appium Webdriver and visit www.google.com
 """
 
 # iOS environment
-# from appium import webdriver
-from selenium import webdriver
+from appium import webdriver
+# from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 # from unittest.Testcase import assertEqual
 import time
 import os
 import ipdb as pdb
 
-# class LoginTests(unittest.TestCase):
-#     def setUp(self):
-#         desired_caps = {}
-#         # desired_caps['appium-version'] = '1.0'
-#         desired_caps['platformName'] = 'Android'
-#         desired_caps['platformVersion'] = '5.1'
-#         # desired_caps['app'] = os.path.abspath('/Users/mkim/Documents/AUT/app/build/outputs/apk/app-debug-unaligned.apk')
- 
-#         self.wd = webdriver.Remote('www.google.com', desired_caps)
-#         self.wd.implicitly_wait(60)
+"""*** WebDriverException: Message: An unknown server-side error occurred 
+while processing the command. Original error: Could not find a device to 
+launch. You requested 'iPhone 5s (7.1 Simulator)', but the available 
+devices were: [
+		"Resizable iPad (8.3 Simulator) [BD70449B-F8DD-4E8B-B38E-3595F28E54F0]",
+		"Resizable iPhone (8.3 Simulator) [17AF2275-82E8-4B30-AE28-C36D5725B10F]",
+		"iPad 2 (8.3 Simulator) [2E8FA7B9-F32A-44B2-9CA5-0A764A47A4CD]",
+		"iPad Air (8.3 Simulator) [F1FCE631-4D10-49BF-85EF-FAECB8C7BCC9]",
+		"iPad Retina (8.3 Simulator) [0FF4459F-D39B-40CD-9F84-44D09F226A7D]",
+		"iPhone 4s (8.3 Simulator) [B359392B-5B4D-4DFD-B839-B675F6BB4440]",
+		"iPhone 5 (8.3 Simulator) [EDDCBDC8-962D-442B-B68B-70DB2712DB22]",
+		"iPhone 5s (8.3 Simulator) [8E3B0FF9-DF1E-417C-B0BA-D1755EF614E4]",
+		"iPhone 6 (8.3 Simulator) [452532BA-AD63-4312-8288-C107242186A3]",
+		"iPhone 6 Plus (8.3 Simulator) [163386AB-E6BE-4DC2-96F0-A9494E34427D]"
+	]
+
+"""
 
 {
   'platformName': 'iOS',
@@ -31,8 +38,14 @@ import ipdb as pdb
 
 # python
 # setup the web driver and launch the webview app.
-capabilities = { 'browserName': 'Safari' }
-driver = webdriver.Remote('http://localhost:4723/wd/hub', capabilities)
+desired_caps = {}
+desired_caps['platformName'] = 'iOS'
+desired_caps['platformVersion'] = '8.3'
+desired_caps['deviceName'] = 'iPhone Simulator'
+pdb.set_trace()
+
+driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_caps)
+driver.implicitly_wait(3) # seconds
 
 # Navigate to the page and interact with the elements on the guinea-pig page using id.
 driver.get('http://saucelabs.com/test/guinea-pig')
@@ -46,17 +59,17 @@ alert = driver.switch_to_alert()
 alert.send_keys('quick' + Keys.RETURN + 'solv' + Keys.RETURN)
 
 # page 1, click arrow
-time.sleep(1.5)
+# time.sleep(1.5)
 elem = driver.find_element_by_class_name('_34eC')
 elem.click()
 
 # page 2, click arrow
-time.sleep(1.5)
+# time.sleep(1.5)
 elem = driver.find_element_by_class_name('_34eC')
 elem.click()
 
 # click button "Set my location" 
-time.sleep(1.5)
+# time.sleep(1.5)
 elem = driver.find_element_by_css_selector('input[value="Set my location"]')
 # elem = driver.find_element_by_class_name('_3y2m')
 elem.click()
@@ -69,7 +82,7 @@ alert = driver.switch_to_alert()
 alert.accept()
 
 # select text box & enter text
-time.sleep(1.5)
+# time.sleep(1.5)
 elem = driver.find_element_by_class_name('geosuggest__input')
 elem.send_keys('Dallas, TX' + Keys.ENTER)
 
@@ -79,13 +92,13 @@ elem.send_keys('back pain' + Keys.ENTER)
 
 
 # click "book"
-time.sleep(5)
+# time.sleep(5)
 driver.find_element_by_link_text('Book').click()
 
 # click "change"
 
 # click "next"
-time.sleep(1.5)
+# time.sleep(1.5)
 driver.find_element_by_class_name('_2u1X').click()
 
 # fill form
@@ -99,7 +112,7 @@ elem = driver.find_element_by_id('phone')
 elem.send_keys('7148236827')
 elem = driver.find_element_by_id('notes')
 elem.send_keys('testing')
-time.sleep(1.5)
+# time.sleep(1.5)
 elem = driver.find_element_by_class_name('_1RVK')
 elem.click()
 
@@ -109,7 +122,7 @@ elem = driver.find_element_by_class_name('_2fkl')
 elem.click()
 
 # click finalize
-time.sleep(1.5)
+# time.sleep(1.5)
 elem = driver.find_element_by_class_name('_1lJn')
 elem.click()
 
