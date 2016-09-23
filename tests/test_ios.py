@@ -44,20 +44,20 @@ class WebViewIOSTests(unittest.TestCase):
 		# desired_caps['deviceName'] = 'iPhone Simulator'
 
 		self.driver = webdriver.Remote('http://127.0.0.1:4723/wd/hub', desired_caps)
-		# self.driver = webdriver.Remote('http://localhost:4723/wd/hub')
 		self.driver.implicitly_wait(3)
 		sleep(10)
 
 	def tearDown(self):
 		self.driver.quit()
 
-
-	# def test_google(self):
-	# 	print self.driver.__dict__
-	# 	self.driver.delete_all_cookies()
-	# 	self.driver.get('http://www.google.com')
-	# 	# self.driver.switch_to.context('WEBVIEW')
-	# 	sleep(10)
+	def test_0_google(self):
+		print self.driver.__dict__
+		self.driver.delete_all_cookies()
+		self.driver.get('http://www.google.com')
+		# self.driver.switch_to.context('WEBVIEW')
+		sleep(10)
+		self.driver.save_screenshot(screenshot_folder + '/0_google_{}.png'.format(0))
+		assert 'Google' ==  self.driver.title
 	# 	search = self.driver.find_element_by_class_name('gsfi')
 	# 	sleep(10)
 	# 	search.send_keys('sauce labs')
@@ -72,41 +72,93 @@ class WebViewIOSTests(unittest.TestCase):
 
 	# 	self.assertEquals('sauce labs - Google Search', self.driver.title)
 
-	def test_solvhealth(self):
+
+	def test_1_solvhealth(self):
+
+		screenshot_count = 0
+		screenshot_folder = os.getenv('SCREENSHOT_PATH', '')
 
 		print self.driver.__dict__
 		self.driver.delete_all_cookies()
 		self.driver.get('http://www.solvhealth.com')
 		sleep(10)
+		self.driver.save_screenshot(screenshot_folder + '/1_solvhealth_{}.png'.format(screenshot_count))
+		screenshot_count += 1
+		self.assertEquals('Solv Health', self.driver.title)
+		self.assertEquals('https://www.solvhealth.com/welcome', self.driver.current_url)
+
+
+	def test_2_solvhealth(self):
+		screenshot_count = 0
+		screenshot_folder = os.getenv('SCREENSHOT_PATH', '')
+
+		print self.driver.__dict__
+		self.driver.delete_all_cookies()
+		self.driver.get('http://www.solvhealth.com')
+		sleep(10)
+		self.driver.save_screenshot(screenshot_folder + '/2_solvhealth_{}.png'.format(screenshot_count))
+		screenshot_count += 1
 
 		# flip through welcome pages
 		while 'welcome' in self.driver.current_url:
 			self.driver.find_element_by_class_name('_34eC').click()
 			sleep(10)
+			self.driver.save_screenshot(screenshot_folder + '/2_solvhealth_{}.png'.format(screenshot_count))
+			screenshot_count += 1
+
+		assert 'Set my location' in self.driver.page_source
+
+
+
+	def test_3_solvhealth(self):
+		screenshot_count = 0
+		screenshot_folder = os.getenv('SCREENSHOT_PATH', '')
+
+		print self.driver.__dict__
+		self.driver.delete_all_cookies()
+		self.driver.get('http://www.solvhealth.com')
+		sleep(10)
+		self.driver.save_screenshot(screenshot_folder + '/3_solvhealth_{}.png'.format(screenshot_count))
+		screenshot_count += 1
+
+		# flip through welcome pages
+		while 'welcome' in self.driver.current_url:
+			self.driver.find_element_by_class_name('_34eC').click()
+			sleep(10)
+			self.driver.save_screenshot(screenshot_folder + '/3_solvhealth_{}.png'.format(screenshot_count))
+			screenshot_count += 1
 
 		# click "Set my location"
 		# self.driver.find_element_by_css_selector('input[value="Set my location"]').click()
 		self.driver.find_element_by_class_name('_3y2m').click()
 		
+
 		try:
 			WebDriverWait(self.driver, 10).until(EC.alert_is_present(),
-                                   'Timed out waiting for PA creation ' +
-                                   'confirmation popup to appear.')
+									'Timed out waiting for PA creation ' +
+									'confirmation popup to appear.')
 
-			alert = self.driver.switch_to_alert()
-			alert.accept()
+			self.driver.switch_to.alert.accept()
+
+			self.driver.save_screenshot(screenshot_folder + '/3_solvhealth_{}.png'.format(screenshot_count))
+			screenshot_count += 1
 			print "alert accepted"
+
 		except TimeoutException:
 			print "no alert"
 
 		try:
 			WebDriverWait(self.driver, 10).until(EC.alert_is_present(),
-                                   'Timed out waiting for PA creation ' +
-                                   'confirmation popup to appear.')
+									'Timed out waiting for PA creation ' +
+									'confirmation popup to appear.')
 
-			alert = self.driver.switch_to_alert()
-			alert.accept()
+			self.driver.switch_to.alert.accept()
+
+			self.driver.save_screenshot(screenshot_folder + '/3_solvhealth_{}.png'.format(screenshot_count))
+			screenshot_count += 1
+
 			print "alert accepted"
+
 		except TimeoutException:
 			print "no alert"
 
@@ -119,17 +171,30 @@ class WebViewIOSTests(unittest.TestCase):
 		# location 
 		self.driver.find_element_by_class_name('geosuggest__input')\
 								.send_keys('Dallas, TX' + Keys.ENTER)
+		
 		sleep(15)
+		self.driver.save_screenshot(screenshot_folder + '/solvhealth_{}.png'.format(screenshot_count))
+		screenshot_count += 1
+		
 		# symptoms 
 		self.driver.find_element_by_id('symptoms')\
 								.send_keys('EXPLOSIVE DIARRHEA' + Keys.ENTER)
+		
 		sleep(15)
+		self.driver.save_screenshot(screenshot_folder + '/solvhealth_{}.png'.format(screenshot_count))
+		screenshot_count += 1
+		
 		# screenshot
-		self.driver.save_screenshot('/tmp/test_screenshot.png')
+		self.driver.save_screenshot(screenshot_folder + '/solvhealth_{}.png'.format(screenshot_count))
+		screenshot_count += 1
 		# 
 		assert 'CommunityMed Urgent Care' in self.driver.page_source
 
 
+
+if __name__ == '__main__':
+	suite = unittest.TestLoader().loadTestsFromTestCase(WebViewIOSTests)
+	unittest.TextTestRunner(verbosity=2).run(suite)
 
 
 # def test_get_url_example_outside():
@@ -262,7 +327,3 @@ class WebViewIOSTests(unittest.TestCase):
 
 # # close the driver
 # driver.quit()
-
-if __name__ == '__main__':
-	suite = unittest.TestLoader().loadTestsFromTestCase(WebViewIOSTests)
-	unittest.TextTestRunner(verbosity=2).run(suite)
