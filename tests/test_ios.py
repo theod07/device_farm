@@ -33,7 +33,20 @@ devices were: [
 	]
 """
 
+screenshot_folder = os.getenv('SCREENSHOT_PATH', '')
+AWS_SLEEP_TIME = 10
+LOCAL_SLEEP_TIME = 5
+
+
+if os.getenv('SCREENSHOT_PATH', '') == '/tmp':
+	SLEEP_TIME = LOCAL_SLEEP_TIME
+else:
+	SLEEP_TIME = AWS_SLEEP_TIME
+
+
 class WebViewIOSTests(unittest.TestCase):
+
+	screenshot_count = 0
 
 	def setUp(self):
 		# # set up appium
@@ -47,7 +60,7 @@ class WebViewIOSTests(unittest.TestCase):
 
 		self.driver = webdriver.Remote('http://127.0.0.1:4723/wd/hub', desired_caps)
 		self.driver.implicitly_wait(3)
-		sleep(10)
+		sleep(SLEEP_TIME)
 
 	def tearDown(self):
 		self.driver.quit()
@@ -55,27 +68,30 @@ class WebViewIOSTests(unittest.TestCase):
 	def test_0_google(self):
 		screenshot_count = 0
 		screenshot_folder = os.getenv('SCREENSHOT_PATH', '')
-		
+
 		print self.driver.__dict__
 		self.driver.delete_all_cookies()
 		self.driver.get('http://www.google.com')
 		# self.driver.switch_to.context('WEBVIEW')
-		sleep(10)
-		self.driver.save_screenshot(screenshot_folder + '/0_google_{}.png'.format(0))
-		assert 'Google' ==  self.driver.title
-	# 	search = self.driver.find_element_by_class_name('gsfi')
-	# 	sleep(10)	
-	# 	search.send_keys('sauce labs')
-	# 	search.send_keys(Keys.RETURN)
-	# 	sleep(10)
-	# 	self.driver.switch_to.alert.accept()
-	# 	sleep(10)
-	# 	self.driver.switch_to.alert.accept()
 
-	# 	# allow the page to load
-	# 	sleep(10)
+		sleep(SLEEP_TIME)
+	 	self.screenshot()
+		search = self.driver.find_element_by_class_name('gsfi')
+		sleep(SLEEP_TIME)
+		self.screenshot()
+		search.send_keys('sauce labs')
+		search.send_keys(Keys.RETURN)
+		sleep(SLEEP_TIME)
+		self.screenshot()
+		self.driver.switch_to.alert.accept()
+		sleep(SLEEP_TIME)
+		self.screenshot()
+		self.driver.switch_to.alert.accept()
 
-	# 	self.assertEquals('sauce labs - Google Search', self.driver.title)
+		# allow the page to load
+		sleep(SLEEP_TIME)
+		self.screenshot()
+		self.assertEquals('sauce labs - Google Search', self.driver.title)
 
 
 	def test_1_solvhealth(self):
@@ -103,6 +119,7 @@ class WebViewIOSTests(unittest.TestCase):
 		sleep(10)
 		self.driver.save_screenshot(screenshot_folder + '/2_solvhealth_{}.png'.format(screenshot_count))
 		screenshot_count += 1
+
 
 		# flip through welcome pages
 		while 'welcome' in self.driver.current_url:
@@ -147,10 +164,12 @@ class WebViewIOSTests(unittest.TestCase):
 
 			self.driver.save_screenshot(screenshot_folder + '/3_solvhealth_{}.png'.format(screenshot_count))
 			screenshot_count += 1
+
 			print "alert accepted"
 
 		except TimeoutException:
 			print "no alert"
+
 
 		try:
 			WebDriverWait(self.driver, 10).until(EC.alert_is_present(),
@@ -170,7 +189,7 @@ class WebViewIOSTests(unittest.TestCase):
 
 		# allow location
 		# self.driver.switch_to.alert.accept()
-		# sleep(15)
+		# sleep(SLEEP_TIME)
 		# self.driver.switch_to.alert.accept()
 		# sleep(15)
 		# location 
@@ -193,6 +212,7 @@ class WebViewIOSTests(unittest.TestCase):
 		self.driver.save_screenshot(screenshot_folder + '/solvhealth_{}.png'.format(screenshot_count))
 		screenshot_count += 1
 		# 
+
 		assert 'CommunityMed Urgent Care' in self.driver.page_source
 
 
