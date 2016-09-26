@@ -47,6 +47,7 @@ class WebViewIOSTests(unittest.TestCase):
 
 		self.driver = webdriver.Remote('http://127.0.0.1:4723/wd/hub', desired_caps)
 		self.driver.implicitly_wait(3)
+		self.driver.delete_all_cookies()
 		sleep(10)
 
 	def tearDown(self):
@@ -57,7 +58,7 @@ class WebViewIOSTests(unittest.TestCase):
 		screenshot_folder = os.getenv('SCREENSHOT_PATH', '')
 		
 		print self.driver.__dict__
-		self.driver.delete_all_cookies()
+
 		self.driver.get('http://www.google.com')
 		# self.driver.switch_to.context('WEBVIEW')
 		sleep(10)
@@ -84,7 +85,7 @@ class WebViewIOSTests(unittest.TestCase):
 		screenshot_folder = os.getenv('SCREENSHOT_PATH', '')
 
 		print self.driver.__dict__
-		self.driver.delete_all_cookies()
+
 		self.driver.get('http://www.solvhealth.com')
 		sleep(10)
 		self.driver.save_screenshot(screenshot_folder + '/1_solvhealth_{}.png'.format(screenshot_count))
@@ -98,7 +99,7 @@ class WebViewIOSTests(unittest.TestCase):
 		screenshot_folder = os.getenv('SCREENSHOT_PATH', '')
 
 		print self.driver.__dict__
-		self.driver.delete_all_cookies()
+		
 		self.driver.get('http://www.solvhealth.com')
 		sleep(10)
 		self.driver.save_screenshot(screenshot_folder + '/2_solvhealth_{}.png'.format(screenshot_count))
@@ -120,7 +121,7 @@ class WebViewIOSTests(unittest.TestCase):
 		screenshot_folder = os.getenv('SCREENSHOT_PATH', '')
 
 		print self.driver.__dict__
-		self.driver.delete_all_cookies()
+		
 		self.driver.get('http://www.solvhealth.com')
 		sleep(10)
 		self.driver.save_screenshot(screenshot_folder + '/3_solvhealth_{}.png'.format(screenshot_count))
@@ -136,44 +137,37 @@ class WebViewIOSTests(unittest.TestCase):
 		# click "Set my location"
 		# self.driver.find_element_by_css_selector('input[value="Set my location"]').click()
 		self.driver.find_element_by_class_name('_3y2m').click()
-		
+		sleep(10)
 
-		try:
-			WebDriverWait(self.driver, 10).until(EC.alert_is_present(),
-									'Timed out waiting for PA creation ' +
-									'confirmation popup to appear.')
+		# try:
+		# 	WebDriverWait(self.driver, 10).until(EC.alert_is_present(),
+		# 							'Timed out waiting for PA creation ' +
+		# 							'confirmation popup to appear.')
 
-			self.driver.switch_to.alert.accept()
+		# 	self.driver.switch_to.alert.accept()
 
-			self.driver.save_screenshot(screenshot_folder + '/3_solvhealth_{}.png'.format(screenshot_count))
-			screenshot_count += 1
-			print "alert accepted"
+		# 	self.driver.save_screenshot(screenshot_folder + '/3_solvhealth_{}.png'.format(screenshot_count))
+		# 	screenshot_count += 1
+		# 	print "alert accepted"
 
-		except TimeoutException:
-			print "no alert"
+		# except TimeoutException:
+		# 	print "no alert"
 
-		try:
-			WebDriverWait(self.driver, 10).until(EC.alert_is_present(),
-									'Timed out waiting for PA creation ' +
-									'confirmation popup to appear.')
+		# try:
+		# 	WebDriverWait(self.driver, 10).until(EC.alert_is_present(),
+		# 							'Timed out waiting for PA creation ' +
+		# 							'confirmation popup to appear.')
 
-			self.driver.switch_to.alert.accept()
+		# 	self.driver.switch_to.alert.accept()
 
-			self.driver.save_screenshot(screenshot_folder + '/3_solvhealth_{}.png'.format(screenshot_count))
-			screenshot_count += 1
+		# 	self.driver.save_screenshot(screenshot_folder + '/3_solvhealth_{}.png'.format(screenshot_count))
+		# 	screenshot_count += 1
 
-			print "alert accepted"
+		# 	print "alert accepted"
 
-		except TimeoutException:
-			print "no alert"
+		# except TimeoutException:
+		# 	print "no alert"
 
-
-		# allow location
-		# self.driver.switch_to.alert.accept()
-		# sleep(15)
-		# self.driver.switch_to.alert.accept()
-		# sleep(15)
-		# location 
 		self.driver.find_element_by_class_name('geosuggest__input')\
 								.send_keys('Dallas, TX' + Keys.ENTER)
 		
