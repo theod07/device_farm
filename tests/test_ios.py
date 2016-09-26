@@ -37,10 +37,12 @@ class WebViewIOSTests(unittest.TestCase):
 
 	def setUp(self):
 		# # set up appium
+		sleep(10)
 		desired_caps = {}
 		desired_caps['platformName'] = 'iOS'
 		desired_caps['platformVersion'] = '8.3'
 		desired_caps['deviceName'] = 'iPhone 5'
+		desired_caps['autoAcceptAlerts'] = 'True'
 		# desired_caps['deviceName'] = 'iPhone Simulator'
 
 		self.driver = webdriver.Remote('http://127.0.0.1:4723/wd/hub', desired_caps)
@@ -51,6 +53,9 @@ class WebViewIOSTests(unittest.TestCase):
 		self.driver.quit()
 
 	def test_0_google(self):
+		screenshot_count = 0
+		screenshot_folder = os.getenv('SCREENSHOT_PATH', '')
+		
 		print self.driver.__dict__
 		self.driver.delete_all_cookies()
 		self.driver.get('http://www.google.com')
@@ -59,7 +64,7 @@ class WebViewIOSTests(unittest.TestCase):
 		self.driver.save_screenshot(screenshot_folder + '/0_google_{}.png'.format(0))
 		assert 'Google' ==  self.driver.title
 	# 	search = self.driver.find_element_by_class_name('gsfi')
-	# 	sleep(10)
+	# 	sleep(10)	
 	# 	search.send_keys('sauce labs')
 	# 	search.send_keys(Keys.RETURN)
 	# 	sleep(10)
