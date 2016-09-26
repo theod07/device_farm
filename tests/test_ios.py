@@ -75,22 +75,26 @@ class WebViewIOSTests(unittest.TestCase):
 		# self.driver.switch_to.context('WEBVIEW')
 
 		sleep(SLEEP_TIME)
-	 	self.screenshot()
+
 		search = self.driver.find_element_by_class_name('gsfi')
 		sleep(SLEEP_TIME)
-		self.screenshot()
+		self.driver.save_screenshot(screenshot_folder + '/0_google_{}.png'.format(screenshot_count))
+		screenshot_count += 1
 		search.send_keys('sauce labs')
 		search.send_keys(Keys.RETURN)
 		sleep(SLEEP_TIME)
-		self.screenshot()
+		self.driver.save_screenshot(screenshot_folder + '/0_google_{}.png'.format(screenshot_count))
+		screenshot_count += 1
 		self.driver.switch_to.alert.accept()
 		sleep(SLEEP_TIME)
-		self.screenshot()
+		self.driver.save_screenshot(screenshot_folder + '/0_google_{}.png'.format(screenshot_count))
+		screenshot_count += 1
 		self.driver.switch_to.alert.accept()
 
 		# allow the page to load
 		sleep(SLEEP_TIME)
-		self.screenshot()
+		self.driver.save_screenshot(screenshot_folder + '/0_google_{}.png'.format(screenshot_count))
+		screenshot_count += 1
 		self.assertEquals('sauce labs - Google Search', self.driver.title)
 
 
