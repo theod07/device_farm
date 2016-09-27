@@ -47,7 +47,7 @@ class WebViewIOSTests(unittest.TestCase):
 
 		self.driver = webdriver.Remote('http://127.0.0.1:4723/wd/hub', desired_caps)
 		# sleep(2)
-		self.driver.implicitly_wait(30)
+		self.driver.implicitly_wait(90)
 		# sleep(2)
 		self.driver.delete_all_cookies()
 		sleep(10)
@@ -145,6 +145,10 @@ class WebViewIOSTests(unittest.TestCase):
 		self.driver.find_element_by_class_name('_3y2m').click()
 		sleep(10)
 
+		self.driver.save_screenshot(screenshot_folder + '/3_solvhealth_{}.png'.format(screenshot_count))
+		screenshot_count += 1
+		sleep(10)
+
 
 		for i in ['first_alert', 'second_alert']:
 
@@ -161,7 +165,7 @@ class WebViewIOSTests(unittest.TestCase):
 
 			except TimeoutException:
 				print "no alert"
-				
+
 
 		self.driver.find_element_by_class_name('geosuggest__input')\
 								.send_keys('Dallas, TX' + Keys.ENTER)
