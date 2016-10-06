@@ -1,7 +1,3 @@
-"""
-Create a simple test that will open Appium Webdriver and visit www.google.com
-"""
-
 # iOS environment
 from appium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -80,6 +76,32 @@ class WebViewIOSTests(unittest.TestCase):
 	# 	sleep(10)
 
 	# 	self.assertEquals('sauce labs - Google Search', self.driver.title)
+
+	def test_kiosk(self):
+		screenshot_count = 0
+		screenshot_folder = os.getenv('SCREENSHOT_PATH', '')
+
+		KIOSK_URL = 'https://facility-manage-stage.herokuapp.com/book/pYrynB'
+		self.driver.get(KIOSK_URL)
+
+		el = self.driver.find_element_by_id('firstName')
+		el.send_keys('THEO')
+
+		el = self.driver.find_element_by_id('lastName')
+		el.send_keys('DO')
+
+		el = self.driver.find_element_by_id('birthDate')
+		el.send_keys('06031989')
+
+		el = self.driver.find_element_by_id('phone')
+		el.send_keys('7148236827')
+
+		el = self.driver.find_element_by_id('reason')
+		el.send_keys('DIARRHEA')
+
+		self.driver.find_element_by_class_name('_324y').click()
+
+		assert 'Success!' in self.driver.page_source
 
 
 	def test_1_solvhealth(self):
