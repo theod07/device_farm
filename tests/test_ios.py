@@ -77,7 +77,7 @@ class WebViewIOSTests(unittest.TestCase):
 
 	# 	self.assertEquals('sauce labs - Google Search', self.driver.title)
 
-	def test_kiosk(self):
+	def test_2_kiosk(self):
 		screenshot_count = 0
 		screenshot_folder = os.getenv('SCREENSHOT_PATH', '')
 
@@ -99,14 +99,21 @@ class WebViewIOSTests(unittest.TestCase):
 		el = self.driver.find_element_by_id('reason')
 		el.send_keys('GROSS STUFF')
 
-		self.driver.save_screenshot(screenshot_folder + '/kiosk_{}.png'.format(screenshot_count))
+		self.driver.save_screenshot(screenshot_folder + '/2_kiosk_{}.png'.format(screenshot_count))
 		screenshot_count += 1
 
 		self.driver.find_element_by_class_name('_324y').click()
-		sleep(2)
-		self.driver.save_screenshot(screenshot_folder + '/kiosk_{}.png'.format(screenshot_count))
+		sleep(3)
+		self.driver.save_screenshot(screenshot_folder + '/2_kiosk_{}.png'.format(screenshot_count))
 		screenshot_count += 1
 
+		while self.driver.title == 'Sign in':
+			sleep(1)
+			self.driver.save_screenshot(screenshot_folder + '/2_kiosk_{}.png'.format(screenshot_count))
+			screenshot_count += 1
+
+		self.driver.save_screenshot(screenshot_folder + '/2_kiosk_{}.png'.format(screenshot_count))
+		screenshot_count += 1
 		assert 'Success' == self.driver.title
 
 
@@ -137,9 +144,12 @@ class WebViewIOSTests(unittest.TestCase):
 			screenshot_count += 1
 
 
-		self.driver.find_element_by_id('symptoms').send_keys('gross stuff')
+		self.driver.find_element_by_id('symptoms').send_keys('GROSS STUFF')
 		self.driver.find_element_by_class_name('_25eB').click()
 		
+		# wait for search results to load
+		sleep(5)
+
 		self.driver.save_screenshot(screenshot_folder + '/1_solvhealth_{}.png'.format(screenshot_count))
 		screenshot_count += 1
 
