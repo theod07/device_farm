@@ -10,3 +10,4 @@ find . -name '*.pyo' -exec rm -f {} +
 find . -name '*~' -exec rm -f {} +
 zip -r test_bundle.zip tests/ wheelhouse/ requirements.txt
 
+ 

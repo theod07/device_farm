@@ -148,7 +148,7 @@ class WebViewIOSTests(unittest.TestCase):
 		self.driver.find_element_by_class_name('_25eB').click()
 		
 		# wait for search results to load
-		sleep(5)
+		sleep(10)
 
 		self.driver.save_screenshot(screenshot_folder + '/1_solvhealth_{}.png'.format(screenshot_count))
 		screenshot_count += 1
