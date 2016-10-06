@@ -122,6 +122,8 @@ class WebViewIOSTests(unittest.TestCase):
 		self.driver.save_screenshot(screenshot_folder + '/1_solvhealth_{}.png'.format(screenshot_count))
 		screenshot_count += 1
 
+		# landing page does not always route directly to www.solvhealth.com/welcome
+		# this happens when device has previously seen the landing page
 		if self.driver.current_url == 'https://www.solvhealth.com/welcome':
 
 			# click 'Next' button
@@ -134,17 +136,15 @@ class WebViewIOSTests(unittest.TestCase):
 			self.driver.save_screenshot(screenshot_folder + '/1_solvhealth_{}.png'.format(screenshot_count))
 			screenshot_count += 1
 
-		# if the landing page directly routes to www.solvhealth.com/symptoms 
-		# this happens when device has previously seen the landing page
-		else:
-			self.driver.find_element_by_id('symptoms').send_keys('gross stuff')
-			self.driver.find_element_by_class_name('_25eB').click()
-			
-			self.driver.save_screenshot(screenshot_folder + '/1_solvhealth_{}.png'.format(screenshot_count))
-			screenshot_count += 1
 
-			assert 'CommunityMed Urgent Care' in self.driver.page_source
-			assert 'Want another option?' in self.driver.page_source
+		self.driver.find_element_by_id('symptoms').send_keys('gross stuff')
+		self.driver.find_element_by_class_name('_25eB').click()
+		
+		self.driver.save_screenshot(screenshot_folder + '/1_solvhealth_{}.png'.format(screenshot_count))
+		screenshot_count += 1
+
+		assert 'CommunityMed Urgent Care' in self.driver.page_source
+		assert 'Want another option?' in self.driver.page_source
 
 
 	def t_2_solvhealth(self):
