@@ -43,7 +43,7 @@ class WebViewIOSTests(unittest.TestCase):
 
 		self.driver = webdriver.Remote('http://127.0.0.1:4723/wd/hub', desired_caps)
 		# sleep(2)
-		self.driver.implicitly_wait(90)
+		self.driver.implicitly_wait(30)
 		# sleep(2)
 		self.driver.delete_all_cookies()
 		sleep(10)
@@ -91,17 +91,23 @@ class WebViewIOSTests(unittest.TestCase):
 		el.send_keys('DO')
 
 		el = self.driver.find_element_by_id('birthDate')
-		el.send_keys('06031989')
+		el.send_keys('06/03/1989')
 
 		el = self.driver.find_element_by_id('phone')
 		el.send_keys('7148236827')
 
 		el = self.driver.find_element_by_id('reason')
-		el.send_keys('DIARRHEA')
+		el.send_keys('GROSS STUFF')
+
+		self.driver.save_screenshot(screenshot_folder + '/kiosk_{}.png'.format(screenshot_count))
+		screenshot_count += 1
 
 		self.driver.find_element_by_class_name('_324y').click()
+		sleep(2)
+		self.driver.save_screenshot(screenshot_folder + '/kiosk_{}.png'.format(screenshot_count))
+		screenshot_count += 1
 
-		assert 'Success!' in self.driver.page_source
+		assert 'Success' == self.driver.title
 
 
 	def test_1_solvhealth(self):
@@ -113,14 +119,35 @@ class WebViewIOSTests(unittest.TestCase):
 		print self.driver.get_cookies()
 
 		self.driver.get('http://www.solvhealth.com')
-		sleep(10)
 		self.driver.save_screenshot(screenshot_folder + '/1_solvhealth_{}.png'.format(screenshot_count))
 		screenshot_count += 1
-		self.assertEquals('Solv Health', self.driver.title)
-		self.assertEquals('https://www.solvhealth.com/welcome', self.driver.current_url)
+
+		if self.driver.current_url == 'https://www.solvhealth.com/welcome':
+
+			# click 'Next' button
+			self.driver.find_element_by_class_name('eNzk').click()
+			self.driver.save_screenshot(screenshot_folder + '/1_solvhealth_{}.png'.format(screenshot_count))
+			screenshot_count += 1
+
+			# click 'Next' button
+			self.driver.find_element_by_class_name('_382N').click()
+			self.driver.save_screenshot(screenshot_folder + '/1_solvhealth_{}.png'.format(screenshot_count))
+			screenshot_count += 1
+
+		# if the landing page directly routes to www.solvhealth.com/symptoms 
+		# this happens when device has previously seen the landing page
+		else:
+			self.driver.find_element_by_id('symptoms').send_keys('gross stuff')
+			self.driver.find_element_by_class_name('_25eB').click()
+			
+			self.driver.save_screenshot(screenshot_folder + '/1_solvhealth_{}.png'.format(screenshot_count))
+			screenshot_count += 1
+
+			assert 'CommunityMed Urgent Care' in self.driver.page_source
+			assert 'Want another option?' in self.driver.page_source
 
 
-	def test_2_solvhealth(self):
+	def t_2_solvhealth(self):
 		screenshot_count = 0
 		screenshot_folder = os.getenv('SCREENSHOT_PATH', '')
 
@@ -143,7 +170,7 @@ class WebViewIOSTests(unittest.TestCase):
 
 
 
-	def test_3_solvhealth(self):
+	def t_3_solvhealth(self):
 		screenshot_count = 0
 		screenshot_folder = os.getenv('SCREENSHOT_PATH', '')
 
