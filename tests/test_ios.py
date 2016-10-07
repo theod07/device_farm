@@ -51,7 +51,7 @@ class WebViewIOSTests(unittest.TestCase):
 	def tearDown(self):
 		self.driver.quit()
 
-	def test_0_google(self):
+	def t_0_google(self):
 		screenshot_count = 0
 		screenshot_folder = os.getenv('SCREENSHOT_PATH', '')
 		
@@ -108,9 +108,9 @@ class WebViewIOSTests(unittest.TestCase):
 		screenshot_count += 1
 
 		while self.driver.title == 'Sign in':
-			sleep(1)
 			self.driver.save_screenshot(screenshot_folder + '/2_kiosk_{}.png'.format(screenshot_count))
 			screenshot_count += 1
+			sleep(.2)
 
 		self.driver.save_screenshot(screenshot_folder + '/2_kiosk_{}.png'.format(screenshot_count))
 		screenshot_count += 1
