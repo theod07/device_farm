@@ -29,7 +29,20 @@ devices were: [
 	]
 """
 
+screenshot_folder = os.getenv('SCREENSHOT_PATH', '')
+AWS_SLEEP_TIME = 10
+LOCAL_SLEEP_TIME = 5
+
+
+if os.getenv('SCREENSHOT_PATH', '') == '/tmp':
+	SLEEP_TIME = LOCAL_SLEEP_TIME
+else:
+	SLEEP_TIME = AWS_SLEEP_TIME
+
+
 class WebViewIOSTests(unittest.TestCase):
+
+	screenshot_count = 0
 
 	def setUp(self):
 		# # set up appium
@@ -42,7 +55,8 @@ class WebViewIOSTests(unittest.TestCase):
 		# desired_caps['deviceName'] = 'iPhone Simulator'
 
 		self.driver = webdriver.Remote('http://127.0.0.1:4723/wd/hub', desired_caps)
-		# sleep(2)
+
+		# sleep(2
 		self.driver.implicitly_wait(30)
 		# sleep(2)
 		self.driver.delete_all_cookies()
@@ -54,28 +68,35 @@ class WebViewIOSTests(unittest.TestCase):
 	def t_0_google(self):
 		screenshot_count = 0
 		screenshot_folder = os.getenv('SCREENSHOT_PATH', '')
-		
+
 		print self.driver.__dict__
 		print self.driver.get_cookies()
 
 		self.driver.get('http://www.google.com')
 		# self.driver.switch_to.context('WEBVIEW')
-		sleep(10)
-		self.driver.save_screenshot(screenshot_folder + '/0_google_{}.png'.format(0))
-		assert 'Google' ==  self.driver.title
-	# 	search = self.driver.find_element_by_class_name('gsfi')
-	# 	sleep(10)	
-	# 	search.send_keys('sauce labs')
-	# 	search.send_keys(Keys.RETURN)
-	# 	sleep(10)
-	# 	self.driver.switch_to.alert.accept()
-	# 	sleep(10)
-	# 	self.driver.switch_to.alert.accept()
 
-	# 	# allow the page to load
-	# 	sleep(10)
+		sleep(SLEEP_TIME)
 
-	# 	self.assertEquals('sauce labs - Google Search', self.driver.title)
+		search = self.driver.find_element_by_class_name('gsfi')
+		sleep(SLEEP_TIME)
+		self.driver.save_screenshot(screenshot_folder + '/0_google_{}.png'.format(screenshot_count))
+		screenshot_count += 1
+		search.send_keys('sauce labs')
+		search.send_keys(Keys.RETURN)
+		sleep(SLEEP_TIME)
+		self.driver.save_screenshot(screenshot_folder + '/0_google_{}.png'.format(screenshot_count))
+		screenshot_count += 1
+		self.driver.switch_to.alert.accept()
+		sleep(SLEEP_TIME)
+		self.driver.save_screenshot(screenshot_folder + '/0_google_{}.png'.format(screenshot_count))
+		screenshot_count += 1
+		self.driver.switch_to.alert.accept()
+
+		# allow the page to load
+		sleep(SLEEP_TIME)
+		self.driver.save_screenshot(screenshot_folder + '/0_google_{}.png'.format(screenshot_count))
+		screenshot_count += 1
+		self.assertEquals('sauce labs - Google Search', self.driver.title)
 
 	def test_2_kiosk(self):
 		screenshot_count = 0
@@ -169,6 +190,7 @@ class WebViewIOSTests(unittest.TestCase):
 		self.driver.save_screenshot(screenshot_folder + '/2_solvhealth_{}.png'.format(screenshot_count))
 		screenshot_count += 1
 
+
 		# flip through welcome pages
 		while 'welcome' in self.driver.current_url:
 			self.driver.find_element_by_class_name('_34eC').click()
@@ -209,6 +231,7 @@ class WebViewIOSTests(unittest.TestCase):
 		sleep(10)
 
 
+
 		for i in ['first_alert', 'second_alert']:
 
 			try:
@@ -224,7 +247,6 @@ class WebViewIOSTests(unittest.TestCase):
 
 			except TimeoutException:
 				print "no alert"
-
 
 		self.driver.find_element_by_class_name('geosuggest__input')\
 								.send_keys('Dallas, TX' + Keys.ENTER)
@@ -245,6 +267,7 @@ class WebViewIOSTests(unittest.TestCase):
 		self.driver.save_screenshot(screenshot_folder + '/solvhealth_{}.png'.format(screenshot_count))
 		screenshot_count += 1
 		# 
+
 		assert 'CommunityMed Urgent Care' in self.driver.page_source
 
 
@@ -253,134 +276,3 @@ if __name__ == '__main__':
 	suite = unittest.TestLoader().loadTestsFromTestCase(WebViewIOSTests)
 	unittest.TextTestRunner(verbosity=2).run(suite)
 
-
-# def test_get_url_example_outside():
-# 	print('---THIS IS OUTSIDE OF THE CLASS---')
-# 	driver = webdriver.Remote('http://localhost:4723/wd/hub')
-# 	driver.implicitly_wait(3)
-
-# 	search = driver.find_element_by_class_name('gsfi')
-# 	search.send_keys('sauce labs')
-# 	search.send_keys(Keys.RETURN)
-
-# 	# allow the page to load
-# 	sleep(1)
-
-# 	assert 'sauce labs - Google Search' ==  driver.title
-
-# # python
-# # setup the web driver and launch the webview app.
-# desired_caps = {}
-# desired_caps['platformName'] = 'iOS'
-# desired_caps['platformVersion'] = '8.3'
-# desired_caps['deviceName'] = 'iPhone Simulator'
-
-# driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_caps)
-# driver.implicitly_wait(3) # seconds
-
-# # Navigate to the page and interact with the elements on the guinea-pig page using id.
-# # driver.get('http://saucelabs.com/test/guinea-pig')
-# driver.get('https://github.com/theod07')
-
-# screen_size = driver.get_window_size()
-# width, height = screen_size['width'], screen_size['height']
-
-# # navigate to solvhealth.com
-# driver.get("http://www.solvhealth.com")
-# # driver.switch_to_alert().accept()
-
-# # enter credentials
-# # alert = driver.switch_to_alert()
-# # alert.send_keys('quick' + Keys.RETURN + 'solv' + Keys.RETURN)
-
-# # page 1, click arrow
-# # sleep(1.5)
-# driver.find_element_by_class_name('_34eC').click()
-
-# # page 2, click arrow
-# # sleep(1.5)
-# driver.find_element_by_class_name('_34eC').click()
-
-# # click button "Set my location" 
-# # sleep(1.5)
-# driver.find_element_by_css_selector('input[value="Set my location"]').click()
-# # elem = driver.find_element_by_class_name('_3y2m')
-
-
-# # allow location
-# driver.switch_to_alert().accept()
-# driver.switch_to_alert().accept()
-
-# # select text box & enter text
-# # sleep(1.5)
-# elem = driver.find_element_by_class_name('geosuggest__input')
-# elem.send_keys('Dallas, TX' + Keys.ENTER)
-
-# # enter symptoms
-# elem = driver.find_element_by_id('symptoms')
-# elem.send_keys('EXPLOSIVE DIARRHEA' + Keys.ENTER)
-
-
-# # click "book"
-# # sleep(5)
-
-# start_x = width - 40
-# start_y = height - 200
-# end_x = 40
-# end_y = height - 200
-
-
-# pdb.set_trace()
-# driver.save_screenshot('/tmp/appium_screenshot.png')
-
-# action = TouchAction().press(start_x, start_y).move_to(-30, 0).release()
-# driver.swipe(start_x, start_y, end_x, end_y, duration=500)
-
-# sleep(3)
-# driver.find_element_by_class_name('_2ZwF').click()
-# sleep(3)
-# driver.find_element_by_class_name('_2ZwF').click()
-# driver.find_element_by_link_text('Book').click()
-
-# # click "change"
-
-# # click "next"
-# # sleep(1.5)
-# driver.find_element_by_class_name('_2u1X').click()
-
-# # fill form
-# elem = driver.find_element_by_id('firstName')
-# elem.send_keys('theo')
-# elem = driver.find_element_by_id('lastName')
-# elem.send_keys('do')
-# elem = driver.find_element_by_id('email')
-# elem.send_keys('theo@solvhealth.com')
-# elem = driver.find_element_by_id('phone')
-# elem.send_keys('7148236827')
-# elem = driver.find_element_by_id('notes')
-# elem.send_keys('testing')
-# # sleep(1.5)
-# elem = driver.find_element_by_class_name('_1RVK')
-# elem.click()
-
-# # flow branches here for insurance
-# # No. I know I'm covered or will check at clinic
-# elem = driver.find_element_by_class_name('_2fkl')
-# elem.click()
-
-# # click finalize
-# # sleep(1.5)
-# elem = driver.find_element_by_class_name('_1lJn')
-# elem.click()
-
-# pdb.set_trace()
-
-# # div = driver.find_element_by_id('i_am_an_id')
-# # check the text retrieved matches expected value
-# # assertEqual('I am a div', div.text)
-
-# # populate the comments field by id
-# # driver.find_element_by_id('comments').send_keys('My comment')
-
-# # close the driver
-# driver.quit()
