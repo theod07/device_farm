@@ -153,7 +153,7 @@ class WebViewIOSTests(unittest.TestCase):
 		self.driver.save_screenshot(screenshot_folder + '/1_solvhealth_{}.png'.format(screenshot_count))
 		screenshot_count += 1
 
-		assert 'CommunityMed Urgent Care' in self.driver.page_source
+		# assert 'CommunityMed Urgent Care' in self.driver.page_source
 		assert 'Want another option?' in self.driver.page_source
 
 
