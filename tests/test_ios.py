@@ -8,6 +8,7 @@ from selenium.common.exceptions import TimeoutException
 from time import sleep
 import unittest
 import os
+from bs4 import BeautifulSoup
 
 import ipdb as pdb
 
@@ -16,263 +17,166 @@ import ipdb as pdb
 while processing the command. Original error: Could not find a device to 
 launch. You requested 'iPhone 5s (7.1 Simulator)', but the available 
 devices were: [
-		"Resizable iPad (8.3 Simulator) [BD70449B-F8DD-4E8B-B38E-3595F28E54F0]",
-		"Resizable iPhone (8.3 Simulator) [17AF2275-82E8-4B30-AE28-C36D5725B10F]",
-		"iPad 2 (8.3 Simulator) [2E8FA7B9-F32A-44B2-9CA5-0A764A47A4CD]",
-		"iPad Air (8.3 Simulator) [F1FCE631-4D10-49BF-85EF-FAECB8C7BCC9]",
-		"iPad Retina (8.3 Simulator) [0FF4459F-D39B-40CD-9F84-44D09F226A7D]",
-		"iPhone 4s (8.3 Simulator) [B359392B-5B4D-4DFD-B839-B675F6BB4440]",
-		"iPhone 5 (8.3 Simulator) [EDDCBDC8-962D-442B-B68B-70DB2712DB22]",
-		"iPhone 5s (8.3 Simulator) [8E3B0FF9-DF1E-417C-B0BA-D1755EF614E4]",
-		"iPhone 6 (8.3 Simulator) [452532BA-AD63-4312-8288-C107242186A3]",
-		"iPhone 6 Plus (8.3 Simulator) [163386AB-E6BE-4DC2-96F0-A9494E34427D]"
-	]
+        "Resizable iPad (8.3 Simulator) [BD70449B-F8DD-4E8B-B38E-3595F28E54F0]",
+        "Resizable iPhone (8.3 Simulator) [17AF2275-82E8-4B30-AE28-C36D5725B10F]",
+        "iPad 2 (8.3 Simulator) [2E8FA7B9-F32A-44B2-9CA5-0A764A47A4CD]",
+        "iPad Air (8.3 Simulator) [F1FCE631-4D10-49BF-85EF-FAECB8C7BCC9]",
+        "iPad Retina (8.3 Simulator) [0FF4459F-D39B-40CD-9F84-44D09F226A7D]",
+        "iPhone 4s (8.3 Simulator) [B359392B-5B4D-4DFD-B839-B675F6BB4440]",
+        "iPhone 5 (8.3 Simulator) [EDDCBDC8-962D-442B-B68B-70DB2712DB22]",
+        "iPhone 5s (8.3 Simulator) [8E3B0FF9-DF1E-417C-B0BA-D1755EF614E4]",
+        "iPhone 6 (8.3 Simulator) [452532BA-AD63-4312-8288-C107242186A3]",
+        "iPhone 6 Plus (8.3 Simulator) [163386AB-E6BE-4DC2-96F0-A9494E34427D]"
+        ]
 """
 
-screenshot_folder = os.getenv('SCREENSHOT_PATH', '')
+SCREENSHOT_FOLDER = os.getenv('SCREENSHOT_PATH', '')
 AWS_SLEEP_TIME = 10
 LOCAL_SLEEP_TIME = 5
 
+KIOSK_URL = 'https://facility-manage-stage.herokuapp.com/book/pYrynB'
 
-if os.getenv('SCREENSHOT_PATH', '') == '/tmp':
-	SLEEP_TIME = LOCAL_SLEEP_TIME
+if SCREENSHOT_FOLDER == '/tmp':
+    SLEEP_TIME = LOCAL_SLEEP_TIME
 else:
-	SLEEP_TIME = AWS_SLEEP_TIME
+    SLEEP_TIME = AWS_SLEEP_TIME
 
 
 class WebViewIOSTests(unittest.TestCase):
 
-	screenshot_count = 0
+    def setUp(self):
+        # # set up appium
+        sleep(10)
+        desired_caps = {}
+        desired_caps['platformName'] = 'iOS'
+        desired_caps['platformVersion'] = '8.3'
+        desired_caps['deviceName'] = 'iPhone 5'
+        desired_caps['autoAcceptAlerts'] = 'True'
+        desired_caps['newCommandTimeout'] = 0
+        # desired_caps['deviceName'] = 'iPhone Simulator'
 
-	def setUp(self):
-		# # set up appium
-		sleep(10)
-		desired_caps = {}
-		desired_caps['platformName'] = 'iOS'
-		desired_caps['platformVersion'] = '8.3'
-		desired_caps['deviceName'] = 'iPhone 5'
-		desired_caps['autoAcceptAlerts'] = 'True'
-		# desired_caps['deviceName'] = 'iPhone Simulator'
+        self.driver = webdriver.Remote('http://127.0.0.1:4723/wd/hub', desired_caps)
 
-		self.driver = webdriver.Remote('http://127.0.0.1:4723/wd/hub', desired_caps)
+        # sleep(2
+        self.driver.implicitly_wait(30)
+        # sleep(2)
+        self.driver.delete_all_cookies()
+        sleep(10)
 
-		# sleep(2
-		self.driver.implicitly_wait(30)
-		# sleep(2)
-		self.driver.delete_all_cookies()
-		sleep(10)
-
-	def tearDown(self):
-		self.driver.quit()
-
-	def t_0_google(self):
-		screenshot_count = 0
-		screenshot_folder = os.getenv('SCREENSHOT_PATH', '')
-
-		print self.driver.__dict__
-		print self.driver.get_cookies()
-
-		self.driver.get('http://www.google.com')
-		# self.driver.switch_to.context('WEBVIEW')
-
-		sleep(SLEEP_TIME)
-
-		search = self.driver.find_element_by_class_name('gsfi')
-		sleep(SLEEP_TIME)
-		self.driver.save_screenshot(screenshot_folder + '/0_google_{}.png'.format(screenshot_count))
-		screenshot_count += 1
-		search.send_keys('sauce labs')
-		search.send_keys(Keys.RETURN)
-		sleep(SLEEP_TIME)
-		self.driver.save_screenshot(screenshot_folder + '/0_google_{}.png'.format(screenshot_count))
-		screenshot_count += 1
-		self.driver.switch_to.alert.accept()
-		sleep(SLEEP_TIME)
-		self.driver.save_screenshot(screenshot_folder + '/0_google_{}.png'.format(screenshot_count))
-		screenshot_count += 1
-		self.driver.switch_to.alert.accept()
-
-		# allow the page to load
-		sleep(SLEEP_TIME)
-		self.driver.save_screenshot(screenshot_folder + '/0_google_{}.png'.format(screenshot_count))
-		screenshot_count += 1
-		self.assertEquals('sauce labs - Google Search', self.driver.title)
-
-	def test_2_kiosk(self):
-		screenshot_count = 0
-		screenshot_folder = os.getenv('SCREENSHOT_PATH', '')
-
-		KIOSK_URL = 'https://facility-manage-stage.herokuapp.com/book/pYrynB'
-		self.driver.get(KIOSK_URL)
-
-		el = self.driver.find_element_by_id('firstName')
-		el.send_keys('THEO')
-
-		el = self.driver.find_element_by_id('lastName')
-		el.send_keys('DO')
-
-		el = self.driver.find_element_by_id('birthDate')
-		el.send_keys('06/03/1989')
-
-		el = self.driver.find_element_by_id('phone')
-		el.send_keys('7148236827')
-
-		el = self.driver.find_element_by_id('reason')
-		el.send_keys('GROSS STUFF')
-
-		self.driver.save_screenshot(screenshot_folder + '/2_kiosk_{}.png'.format(screenshot_count))
-		screenshot_count += 1
-
-		self.driver.find_element_by_class_name('_324y').click()
-		sleep(3)
-		self.driver.save_screenshot(screenshot_folder + '/2_kiosk_{}.png'.format(screenshot_count))
-		screenshot_count += 1
-
-		while self.driver.title == 'Sign in':
-			self.driver.save_screenshot(screenshot_folder + '/2_kiosk_{}.png'.format(screenshot_count))
-			screenshot_count += 1
-			sleep(.2)
-
-		self.driver.save_screenshot(screenshot_folder + '/2_kiosk_{}.png'.format(screenshot_count))
-		screenshot_count += 1
-		assert 'Success' == self.driver.title
+    def tearDown(self):
+        self.driver.quit()
 
 
-	def test_1_solvhealth(self):
+    def save_screen(self, testname, screenshot_count):
 
-		screenshot_count = 0
-		screenshot_folder = os.getenv('SCREENSHOT_PATH', '')
+        fname = '{}_{}'.format(testname, screenshot_count)
 
-		print self.driver.__dict__
-		print self.driver.get_cookies()
+        with open(SCREENSHOT_FOLDER + '/{}.html'.format(fname), 'w') as f:
+            f.write(self.driver.page_source)
 
-		self.driver.get('http://www.solvhealth.com')
-		self.driver.save_screenshot(screenshot_folder + '/1_solvhealth_{}.png'.format(screenshot_count))
-		screenshot_count += 1
+        self.driver.save_screenshot(SCREENSHOT_FOLDER + '/{}.png'.format(fname))
 
-		# landing page does not always route directly to www.solvhealth.com/welcome
-		# this happens when device has previously seen the landing page
-		if self.driver.current_url == 'https://www.solvhealth.com/welcome':
-
-			# click 'Next' button
-			self.driver.find_element_by_class_name('eNzk').click()
-			self.driver.save_screenshot(screenshot_folder + '/1_solvhealth_{}.png'.format(screenshot_count))
-			screenshot_count += 1
-
-			# click 'Next' button
-			self.driver.find_element_by_class_name('_382N').click()
-			self.driver.save_screenshot(screenshot_folder + '/1_solvhealth_{}.png'.format(screenshot_count))
-			screenshot_count += 1
+        new_count = screenshot_count + 1
+        return new_count
 
 
-		self.driver.find_element_by_id('symptoms').send_keys('GROSS STUFF')
-		self.driver.find_element_by_class_name('_25eB').click()
-		
-		# wait for search results to load
-		sleep(10)
-
-		self.driver.save_screenshot(screenshot_folder + '/1_solvhealth_{}.png'.format(screenshot_count))
-		screenshot_count += 1
-
-		# assert 'CommunityMed Urgent Care' in self.driver.page_source
-		assert 'Want another option?' in self.driver.page_source
+    def test_2_kiosk(self):
+        screenshot_count = 0
+        SCREENSHOT_FOLDER = os.getenv('SCREENSHOT_PATH', '')
 
 
-	def t_2_solvhealth(self):
-		screenshot_count = 0
-		screenshot_folder = os.getenv('SCREENSHOT_PATH', '')
+        self.driver.get(KIOSK_URL)
+        screenshot_count = self.save_screen('2_kiosk', screenshot_count)
 
-		print self.driver.__dict__
-		print self.driver.get_cookies()
-		
-		self.driver.get('http://www.solvhealth.com')
-		sleep(10)
-		self.driver.save_screenshot(screenshot_folder + '/2_solvhealth_{}.png'.format(screenshot_count))
-		screenshot_count += 1
+        el = self.driver.find_element_by_id('firstName')
+        el.send_keys('THEO')
 
+        el = self.driver.find_element_by_id('lastName')
+        el.send_keys('DO')
 
-		# flip through welcome pages
-		while 'welcome' in self.driver.current_url:
-			self.driver.find_element_by_class_name('_34eC').click()
-			sleep(10)
-			self.driver.save_screenshot(screenshot_folder + '/2_solvhealth_{}.png'.format(screenshot_count))
-			screenshot_count += 1
+        el = self.driver.find_element_by_id('birthDate')
+        el.send_keys('06/03/1989')
 
-		assert 'Set my location' in self.driver.page_source
+        el = self.driver.find_element_by_id('phone')
+        el.send_keys('7148236827')
 
+        el = self.driver.find_element_by_id('reason')
+        el.send_keys('GROSS STUFF')
 
+        screenshot_count = self.save_screen('2_kiosk', screenshot_count)
 
-	def t_3_solvhealth(self):
-		screenshot_count = 0
-		screenshot_folder = os.getenv('SCREENSHOT_PATH', '')
+        self.driver.find_element_by_class_name('_324y').click()
+        sleep(3)
 
-		print 'driver.__dict__ \n', self.driver.__dict__
-		print 'driver.get_cookies() \n', self.driver.get_cookies()
-		
-		self.driver.get('http://www.solvhealth.com')
-		sleep(10)
-		self.driver.save_screenshot(screenshot_folder + '/3_solvhealth_{}.png'.format(screenshot_count))
-		screenshot_count += 1
+        screenshot_count = self.save_screen('2_kiosk', screenshot_count)
 
-		# flip through welcome pages
-		while 'welcome' in self.driver.current_url:
-			self.driver.find_element_by_class_name('_34eC').click()
-			sleep(10)
-			self.driver.save_screenshot(screenshot_folder + '/3_solvhealth_{}.png'.format(screenshot_count))
-			screenshot_count += 1
+        while self.driver.title == 'Sign in':
 
-		# click "Set my location"
-		# self.driver.find_element_by_css_selector('input[value="Set my location"]').click()
-		self.driver.find_element_by_class_name('_3y2m').click()
-		sleep(10)
+            screenshot_count = self.save_screen('2_kiosk', screenshot_count)
+            sleep(.2)
 
-		self.driver.save_screenshot(screenshot_folder + '/3_solvhealth_{}.png'.format(screenshot_count))
-		screenshot_count += 1
-		sleep(10)
+        screenshot_count = self.save_screen('2_kiosk', screenshot_count)
 
+        assert 'Success' in self.driver.title
 
+    def test_1_solvhealth(self):
 
-		for i in ['first_alert', 'second_alert']:
+        screenshot_count = 0
+        SCREENSHOT_FOLDER = os.getenv('SCREENSHOT_PATH', '')
 
-			try:
-				WebDriverWait(self.driver, 10).until(EC.alert_is_present(),
-										'Timed out waiting for PA creation ' +
-										'confirmation popup to appear.')
+        print self.driver.__dict__
+        print self.driver.get_cookies()
 
-				self.driver.switch_to.alert.dismiss()
+        self.driver.get('http://www.solvhealth.com')
 
-				self.driver.save_screenshot(screenshot_folder + '/3_solvhealth_{}.png'.format(screenshot_count))
-				screenshot_count += 1
-				print "alert accepted"
+        screenshot_count = self.save_screen('1_solvhealth', screenshot_count)
 
-			except TimeoutException:
-				print "no alert"
+        # landing page does not always route directly to www.solvhealth.com/welcome
+        # this happens when device has previously seen the landing page
+        if self.driver.current_url == 'https://www.solvhealth.com/welcome':
+            # click 'Next' button
+            self.driver.find_element_by_class_name('eNzk').click()
 
-		self.driver.find_element_by_class_name('geosuggest__input')\
-								.send_keys('Dallas, TX' + Keys.ENTER)
-		
-		sleep(15)
-		self.driver.save_screenshot(screenshot_folder + '/solvhealth_{}.png'.format(screenshot_count))
-		screenshot_count += 1
-		
-		# symptoms 
-		self.driver.find_element_by_id('symptoms')\
-								.send_keys('EXPLOSIVE DIARRHEA' + Keys.ENTER)
-		
-		sleep(15)
-		self.driver.save_screenshot(screenshot_folder + '/solvhealth_{}.png'.format(screenshot_count))
-		screenshot_count += 1
-		
-		# screenshot
-		self.driver.save_screenshot(screenshot_folder + '/solvhealth_{}.png'.format(screenshot_count))
-		screenshot_count += 1
-		# 
+            screenshot_count = self.save_screen('1_solvhealth', screenshot_count)
 
-		assert 'CommunityMed Urgent Care' in self.driver.page_source
+            # click 'Next' button
+            self.driver.find_element_by_class_name('_382N').click()
 
+            screenshot_count = self.save_screen('1_solvhealth', screenshot_count)
+
+        self.driver.find_element_by_id('symptoms').send_keys('GROSS STUFF')
+        sleep(1)
+        self.driver.find_element_by_class_name('_25eB').click()
+
+        # wait for search results to load
+        sleep(10)
+
+        screenshot_count = self.save_screen('1_solvhealth', screenshot_count)
+
+        # assert 'CommunityMed Urgent Care' in self.driver.page_source
+        assert 'Want another option?' in self.driver.page_source
+
+        self.driver.find_element_by_class_name('OML6').click()
+        screenshot_count = self.save_screen('1_solvhealth', screenshot_count)
+        self.driver.find_element_by_class_name('_2u1X').click()
+        screenshot_count = self.save_screen('1_solvhealth', screenshot_count)
+
+        self.driver.find_element_by_id('firstName').send_keys('Theo')
+        self.driver.find_element_by_id('lastName').send_keys('Do')
+        self.driver.find_element_by_id('birthDate').send_keys('06/03/1989')
+        self.driver.find_element_by_id('phone').send_keys('7148236827')
+        self.driver.find_element_by_id('email').send_keys('theo@solvhealth.com')
+        self.driver.find_element_by_id('notes').send_keys('testing')
+        self.driver.find_element_by_class_name('_1RVK').click()
+
+        sleep(1)
+        screenshot_count = self.save_screen('1_solvhealth', screenshot_count)
+        self.driver.find_element_by_class_name('QgRI').click()
+        screenshot_count = self.save_screen('1_solvhealth', screenshot_count)
+
+        assert 'Finalize' in self.driver.page_source
 
 
 if __name__ == '__main__':
-	suite = unittest.TestLoader().loadTestsFromTestCase(WebViewIOSTests)
-	unittest.TextTestRunner(verbosity=2).run(suite)
-
+    suite = unittest.TestLoader().loadTestsFromTestCase(WebViewIOSTests)
+    unittest.TextTestRunner(verbosity=2).run(suite)
