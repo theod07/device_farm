@@ -8,6 +8,7 @@ from selenium.common.exceptions import TimeoutException
 from time import sleep
 import unittest
 import os
+import requests
 from bs4 import BeautifulSoup
 
 import ipdb as pdb
@@ -34,7 +35,13 @@ SCREENSHOT_FOLDER = os.getenv('SCREENSHOT_PATH', '')
 AWS_SLEEP_TIME = 10
 LOCAL_SLEEP_TIME = 5
 
+SOLVHEALTH_URL = 'http://www.solvhealth.com'
 KIOSK_URL = 'https://facility-manage-stage.herokuapp.com/book/pYrynB'
+STAGE_SOLVHEALTH_URL = 'https://stage.solvhealth.com'
+QUICKCARE_DALLAS_URL = 'https://stage.solvhealth.com/Quick-Care---Solv-Dallas-1-Preston-Rd-Dallas-TX-75252-100000'
+WAITLIST_URL = 'https://stage.solvhealth.com/b'
+DAPI_QA_HOST = 'https://facility-dapi-qa.herokuapp.com'
+
 
 if SCREENSHOT_FOLDER == '/tmp':
     SLEEP_TIME = LOCAL_SLEEP_TIME
@@ -80,86 +87,46 @@ class WebViewIOSTests(unittest.TestCase):
         return new_count
 
 
-    def test_2_kiosk(self):
-        screenshot_count = 0
-        SCREENSHOT_FOLDER = os.getenv('SCREENSHOT_PATH', '')
-
-
-        self.driver.get(KIOSK_URL)
-        screenshot_count = self.save_screen('2_kiosk', screenshot_count)
-
-        el = self.driver.find_element_by_id('firstName')
-        el.send_keys('THEO')
-
-        el = self.driver.find_element_by_id('lastName')
-        el.send_keys('DO')
-
-        el = self.driver.find_element_by_id('birthDate')
-        el.send_keys('06/03/1989')
-
-        el = self.driver.find_element_by_id('phone')
-        el.send_keys('7148236827')
-
-        el = self.driver.find_element_by_id('reason')
-        el.send_keys('GROSS STUFF')
-
-        screenshot_count = self.save_screen('2_kiosk', screenshot_count)
-
-        self.driver.find_element_by_class_name('_324y').click()
-        sleep(3)
-
-        screenshot_count = self.save_screen('2_kiosk', screenshot_count)
-
-        while self.driver.title == 'Sign in':
-
-            screenshot_count = self.save_screen('2_kiosk', screenshot_count)
-            sleep(.2)
-
-        screenshot_count = self.save_screen('2_kiosk', screenshot_count)
-
-        assert 'Success' in self.driver.title
-
     def test_1_solvhealth(self):
-
+        TEST_NAME = '1_solvhealth'
         screenshot_count = 0
-        SCREENSHOT_FOLDER = os.getenv('SCREENSHOT_PATH', '')
 
         print self.driver.__dict__
         print self.driver.get_cookies()
 
-        self.driver.get('http://www.solvhealth.com')
+        self.driver.get(SOLVHEALTH_URL)
 
-        screenshot_count = self.save_screen('1_solvhealth', screenshot_count)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
 
         # landing page does not always route directly to www.solvhealth.com/welcome
         # this happens when device has previously seen the landing page
-        if self.driver.current_url == 'https://www.solvhealth.com/welcome':
+        if '/welcome' in self.driver.current_url:
             # click 'Next' button
             self.driver.find_element_by_class_name('eNzk').click()
 
-            screenshot_count = self.save_screen('1_solvhealth', screenshot_count)
+            screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
 
             # click 'Next' button
             self.driver.find_element_by_class_name('_382N').click()
 
-            screenshot_count = self.save_screen('1_solvhealth', screenshot_count)
+            screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
 
-        self.driver.find_element_by_id('symptoms').send_keys('GROSS STUFF')
+        self.driver.find_element_by_id('symptoms').send_keys('carpal tunnel')
         sleep(1)
         self.driver.find_element_by_class_name('_25eB').click()
 
         # wait for search results to load
         sleep(10)
 
-        screenshot_count = self.save_screen('1_solvhealth', screenshot_count)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
 
         # assert 'CommunityMed Urgent Care' in self.driver.page_source
         assert 'Want another option?' in self.driver.page_source
 
         self.driver.find_element_by_class_name('OML6').click()
-        screenshot_count = self.save_screen('1_solvhealth', screenshot_count)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
         self.driver.find_element_by_class_name('_2u1X').click()
-        screenshot_count = self.save_screen('1_solvhealth', screenshot_count)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
 
         self.driver.find_element_by_id('firstName').send_keys('Theo')
         self.driver.find_element_by_id('lastName').send_keys('Do')
@@ -167,14 +134,126 @@ class WebViewIOSTests(unittest.TestCase):
         self.driver.find_element_by_id('phone').send_keys('7148236827')
         self.driver.find_element_by_id('email').send_keys('theo@solvhealth.com')
         self.driver.find_element_by_id('notes').send_keys('testing')
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
         self.driver.find_element_by_class_name('_1RVK').click()
 
         sleep(1)
-        screenshot_count = self.save_screen('1_solvhealth', screenshot_count)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
         self.driver.find_element_by_class_name('QgRI').click()
-        screenshot_count = self.save_screen('1_solvhealth', screenshot_count)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
 
         assert 'Finalize' in self.driver.page_source
+
+    def test_2_kiosk(self):
+        TEST_NAME = '2_kiosk'
+        screenshot_count = 0
+
+        self.driver.get(KIOSK_URL)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        self.driver.find_element_by_id('firstName').send_keys('Theo')
+        self.driver.find_element_by_id('lastName').send_keys('Do')
+        self.driver.find_element_by_id('birthDate').send_keys('06/03/1989')
+        self.driver.find_element_by_id('phone').send_keys('7148236827')
+        self.driver.find_element_by_id('reason').send_keys('carpal tunnel')
+
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        self.driver.find_element_by_class_name('_324y').click()
+        sleep(3)
+
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        while self.driver.title == 'Sign in':
+
+            screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+            sleep(.2)
+
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        assert 'Success' in self.driver.title
+
+    def test_3_stage(self):
+        TEST_NAME = '3_stage'
+        screenshot_count = 0
+
+        self.driver.get(STAGE_SOLVHEALTH_URL)
+        sleep(3)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        # landing page does not always route directly to www.solvhealth.com/welcome
+        # this happens when device has previously seen the landing page
+        if '/welcome' in self.driver.current_url:
+            # click 'Next' button
+            self.driver.find_element_by_class_name('eNzk').click()
+            sleep(1)
+            screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+            # click 'Next' button
+            self.driver.find_element_by_class_name('_382N').click()
+            sleep(1)
+            screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        self.driver.find_element_by_id('symptoms').send_keys('carpal tunnel')
+        sleep(3)
+        self.driver.find_element_by_class_name('_25eB').click()
+
+        # wait for search results to load
+        sleep(10)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        # assert 'CommunityMed Urgent Care' in self.driver.page_source
+        assert 'Quick Care - Solv Dallas' in self.driver.page_source
+
+        self.driver.get(QUICKCARE_DALLAS_URL)
+        sleep(1)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        self.driver.find_element_by_class_name('_2jtT').click()
+        sleep(1)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        self.driver.find_element_by_class_name('_2u1X').click()
+        sleep(1)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        self.driver.find_element_by_id('firstName').send_keys('Theo')
+        self.driver.find_element_by_id('lastName').send_keys('Do')
+        self.driver.find_element_by_id('birthDate').send_keys('06/03/1989')
+        self.driver.find_element_by_id('phone').send_keys('7148236827')
+        self.driver.find_element_by_id('email').send_keys('theo@solvhealth.com')
+        self.driver.find_element_by_id('notes').send_keys('testing')
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        self.driver.find_element_by_class_name('_1RVK').click()
+        sleep(1)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        self.driver.find_element_by_class_name('QgRI').click()
+        sleep(1)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        self.driver.find_element_by_class_name('_1lJn').click()
+        sleep(1)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        book_id = self.driver.find_element_by_class_name('_3Gu-').text.split(' # ')[-1]
+
+        if 'See my place in line' in self.driver.page_source:
+            self.driver.find_element_by_link_text('See my place in line').click()
+            sleep(1)
+            screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        #
+        DAPI_BOOKING_URL = DAPI_QA_HOST + '/v1/bookings/' + book_id
+        r = requests.get(DAPI_BOOKING_URL)
+        assert r.json().get('data', {}).get('status', {'Not found. Full response ' : r.json()}) == 'reserved'
+
+        r = requests.patch(DAPI_BOOKING_URL, data={'status':'cancelled'})
+        r = requests.get(DAPI_BOOKING_URL)
+        assert r.json().get('data', {}).get('status', {'Not found. Full response ': r.json()}) == 'cancelled'
+
 
 
 if __name__ == '__main__':
