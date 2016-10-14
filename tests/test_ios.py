@@ -78,8 +78,8 @@ class WebViewIOSTests(unittest.TestCase):
 
         fname = '{}_{}'.format(testname, screenshot_count)
 
-        with open(SCREENSHOT_FOLDER + '/{}.html'.format(fname), 'w') as f:
-            f.write(self.driver.page_source)
+        # with open(SCREENSHOT_FOLDER + '/{}.html'.format(fname), 'w') as f:
+        #     f.write(self.driver.page_source)
 
         self.driver.save_screenshot(SCREENSHOT_FOLDER + '/{}.png'.format(fname))
 
