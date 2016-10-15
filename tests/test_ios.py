@@ -36,12 +36,12 @@ AWS_SLEEP_TIME = 10
 LOCAL_SLEEP_TIME = 5
 
 SOLVHEALTH_URL = 'http://www.solvhealth.com'
-KIOSK_URL = 'https://facility-manage-stage.herokuapp.com/book/pYrynB'
 STAGE_SOLVHEALTH_URL = 'https://stage.solvhealth.com'
-QUICKCARE_DALLAS_URL = 'https://stage.solvhealth.com/Quick-Care---Solv-Dallas-1-Preston-Rd-Dallas-TX-75252-100000'
+QUICKCARE_WELCOME_URL = 'https://facility-manage-stage.herokuapp.com/welcome/pYrynB'
+KIOSK_URL = 'https://facility-manage-stage.herokuapp.com/book/pYrynB'
+QUICKCARE_DALLAS_URL = 'https://stage.solvhealth.com/-100000'
 WAITLIST_URL = 'https://stage.solvhealth.com/b'
 DAPI_QA_HOST = 'https://facility-dapi-qa.herokuapp.com'
-
 
 if SCREENSHOT_FOLDER == '/tmp':
     SLEEP_TIME = LOCAL_SLEEP_TIME
@@ -87,7 +87,7 @@ class WebViewIOSTests(unittest.TestCase):
         return new_count
 
 
-    def test_1_solvhealth(self):
+    def t_1_solvhealth(self):
         TEST_NAME = '1_solvhealth'
         screenshot_count = 0
 
@@ -120,8 +120,7 @@ class WebViewIOSTests(unittest.TestCase):
 
         screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
 
-        # assert 'CommunityMed Urgent Care' in self.driver.page_source
-        assert 'Want another option?' in self.driver.page_source
+        # assert 'Want another option?' in self.driver.page_source
 
         self.driver.find_element_by_class_name('OML6').click()
         screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
@@ -145,11 +144,54 @@ class WebViewIOSTests(unittest.TestCase):
 
         assert 'Finalize' in self.driver.page_source
 
-    def test_2_kiosk(self):
+    def t_2_kiosk_badnumber(self):
+        TEST_NAME = '2_kiosk_badnumber'
+        screenshot_count = 0
+
+        self.driver.get(QUICKCARE_WELCOME_URL)
+        sleep(1)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        self.driver.find_element_by_class_name('_1Xy-').click()
+        sleep(1)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        self.driver.find_element_by_id('phone').send_keys('4150000000')
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        self.driver.find_element_by_class_name('_3L9J').click()
+        sleep(1)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        assert 'Uh-oh!' in self.driver.page_source
+
+        self.driver.find_element_by_id('phone').send_keys('4150000000')
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        self.driver.find_element_by_class_name('_3L9J').click()
+        sleep(1)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        assert "Third time's a charm." in self.driver.page_source
+
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        self.driver.find_element_by_class_name('_3L9J').click()
+        sleep(1)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        assert "Seems like there's a problem" in self.driver.page_source
+
+        sleep(1)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+
+    def t_2_kiosk(self):
         TEST_NAME = '2_kiosk'
         screenshot_count = 0
 
         self.driver.get(KIOSK_URL)
+        sleep(1)
         screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
 
         self.driver.find_element_by_id('firstName').send_keys('Theo')
@@ -174,8 +216,8 @@ class WebViewIOSTests(unittest.TestCase):
 
         assert 'Success' in self.driver.title
 
-    def test_3_stage(self):
-        TEST_NAME = '3_stage'
+    def test_3_waitlist(self):
+        TEST_NAME = '3_waitlist'
         screenshot_count = 0
 
         self.driver.get(STAGE_SOLVHEALTH_URL)
@@ -204,8 +246,29 @@ class WebViewIOSTests(unittest.TestCase):
         screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
 
         # assert 'CommunityMed Urgent Care' in self.driver.page_source
-        assert 'Quick Care - Solv Dallas' in self.driver.page_source
+        # assert 'Quick Care - Solv Dallas' in self.driver.page_source
 
+        # click adult/kid filter
+        self.driver.find_elements_by_class_name('_20Mk')[0]\
+                    .find_element_by_tag_name('a').click()
+        sleep(1)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+        assert 'For kids and adults' in self.driver.page_source
+
+        # click chevron to go back to SRP
+        self.driver.find_element_by_class_name('_1IRY').click()
+        sleep(1)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        # click location filter
+        self.driver.find_elements_by_class_name('_20Mk')[1]\
+                    .find_element_by_tag_name('a').click()
+        sleep(1)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+        assert 'Use current location' in self.driver.page_source
+
+
+        # go directly to QuickCare CDP
         self.driver.get(QUICKCARE_DALLAS_URL)
         sleep(1)
         screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
@@ -248,8 +311,59 @@ class WebViewIOSTests(unittest.TestCase):
         #
         DAPI_BOOKING_URL = DAPI_QA_HOST + '/v1/bookings/' + book_id
         r = requests.get(DAPI_BOOKING_URL)
-        assert r.json().get('data', {}).get('status', {'Not found. Full response ' : r.json()}) == 'reserved'
+        print book_id
+        print r.json().get('data', {}).get('status')
+        assert r.json().get('data', {}).get('status', {'Not found. Full response ' : r.json()}) in ['reserved', 'pending']
 
+        self.driver.get(QUICKCARE_WELCOME_URL)
+        sleep(1)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        # "I booked online" button
+        self.driver.find_element_by_class_name('_1Xy-').click()
+        sleep(1)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        # enter phone number
+        self.driver.find_element_by_id('phone').send_keys('7148236827')
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        self.driver.find_element_by_class_name('_3L9J').click()
+        sleep(1)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        # make sure that the booking exists in with phone number
+
+        self.driver.get(QUICKCARE_WELCOME_URL)
+        sleep(1)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        self.driver.find_element_by_class_name('fd5g').click()
+        sleep(1)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        self.driver.find_element_by_id('firstName').send_keys('Theo')
+        self.driver.find_element_by_id('lastName').send_keys('Do')
+        self.driver.find_element_by_id('birthDate').send_keys('06/03/1989')
+        self.driver.find_element_by_id('phone').send_keys('7148236827')
+        self.driver.find_element_by_id('reason').send_keys('carpal tunnel')
+
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        self.driver.find_element_by_class_name('_324y').click()
+        sleep(3)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        while self.driver.title == 'Sign in':
+            screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+            sleep(.2)
+
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        assert 'Success' in self.driver.title
+
+
+        # change booking status to 'cancelled'
         r = requests.patch(DAPI_BOOKING_URL, data={'status':'cancelled'})
         r = requests.get(DAPI_BOOKING_URL)
         assert r.json().get('data', {}).get('status', {'Not found. Full response ': r.json()}) == 'cancelled'
