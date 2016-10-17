@@ -37,8 +37,8 @@ LOCAL_SLEEP_TIME = 5
 
 SOLVHEALTH_URL = 'http://www.solvhealth.com'
 STAGE_SOLVHEALTH_URL = 'https://stage.solvhealth.com'
-QUICKCARE_WELCOME_URL = 'https://facility-manage-stage.herokuapp.com/welcome/pYrynB'
-KIOSK_URL = 'https://facility-manage-stage.herokuapp.com/book/pYrynB'
+QUICKCARE_WELCOME_URL = 'https://facility-manage-stage.herokuapp.com/welcome/g1a41z'
+KIOSK_URL = 'https://facility-manage-stage.herokuapp.com/book/g1a41z'
 QUICKCARE_DALLAS_URL = 'https://stage.solvhealth.com/-100000'
 WAITLIST_URL = 'https://stage.solvhealth.com/b'
 DAPI_QA_HOST = 'https://facility-dapi-qa.herokuapp.com'
@@ -237,6 +237,7 @@ class WebViewIOSTests(unittest.TestCase):
             sleep(1)
             screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
 
+        # enter symptoms
         self.driver.find_element_by_id('symptoms').send_keys('carpal tunnel')
         sleep(3)
         self.driver.find_element_by_class_name('_25eB').click()
@@ -244,9 +245,6 @@ class WebViewIOSTests(unittest.TestCase):
         # wait for search results to load
         sleep(10)
         screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
-
-        # assert 'CommunityMed Urgent Care' in self.driver.page_source
-        # assert 'Quick Care - Solv Dallas' in self.driver.page_source
 
         # click adult/kid filter
         self.driver.find_elements_by_class_name('_20Mk')[0]\
@@ -268,7 +266,7 @@ class WebViewIOSTests(unittest.TestCase):
         assert 'Use current location' in self.driver.page_source
 
 
-        # go directly to QuickCare CDP
+        # go directly to Stage QuickCare CDP
         self.driver.get(QUICKCARE_DALLAS_URL)
         sleep(1)
         screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
@@ -333,6 +331,38 @@ class WebViewIOSTests(unittest.TestCase):
         screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
 
         # make sure that the booking exists in with phone number
+
+        # "Not me. Go back."
+        self.driver.find_element_by_class_name('_1Xm-').click()
+        sleep(1)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+        # leads back to welcome page
+        # "I booked online" button
+        self.driver.find_element_by_class_name('_1Xy-').click()
+        sleep(1)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        # enter phone number
+        self.driver.find_element_by_id('phone').send_keys('7148236827')
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        self.driver.find_element_by_class_name('_3L9J').click()
+        sleep(1)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        # "Yes, that's me"
+        self.driver.find_element_by_class_name('_2O4n').click()
+        sleep(1)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        while self.driver.title == 'Sign in':
+
+            screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+            sleep(.2)
+
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        assert 'Success' in self.driver.title
 
         self.driver.get(QUICKCARE_WELCOME_URL)
         sleep(1)
