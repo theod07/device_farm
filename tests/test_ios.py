@@ -142,7 +142,7 @@ class WebViewIOSTests(unittest.TestCase):
         self.driver.find_element_by_id('birthDate').send_keys('06/03/1989')
         self.driver.find_element_by_id('phone').send_keys('7148236827')
         self.driver.find_element_by_id('email').send_keys('theo@solvhealth.com')
-        self.driver.find_element_by_id('notes').send_keys('testing')
+        self.driver.find_element_by_id('notes').send_keys('solv test')
         screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
 
         self.driver.find_element_by_class_name('_1RVK').click()
@@ -258,7 +258,7 @@ class WebViewIOSTests(unittest.TestCase):
         # self.driver.find_element_by_id('symptoms').send_keys('solv test')
         # sleep(3)
         # self.driver.find_element_by_class_name('_25eB').click()
-        # 
+        #
         # # accept system & browser location notifications
         # try:
         #     for alert in ['first', 'second']:
@@ -273,7 +273,7 @@ class WebViewIOSTests(unittest.TestCase):
 
 
         # wait for search results to load
-        sleep(10)
+        sleep(15)
         screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
 
         # self.driver.get(STAGE_OUTSIDE_SERVICE_AREA)
@@ -322,7 +322,7 @@ class WebViewIOSTests(unittest.TestCase):
         self.driver.find_element_by_id('birthDate').send_keys('06/03/1989')
         self.driver.find_element_by_id('phone').send_keys('7148236827')
         self.driver.find_element_by_id('email').send_keys('theo@solvhealth.com')
-        self.driver.find_element_by_id('notes').send_keys('testing')
+        self.driver.find_element_by_id('notes').send_keys('solv test')
         screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
 
         self.driver.find_element_by_class_name('_1RVK').click()
