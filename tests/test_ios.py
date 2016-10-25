@@ -265,7 +265,7 @@ class WebViewIOSTests(unittest.TestCase):
                                                     'Timed out waiting for PA creation ' +
                                                     'confirmation popup to appear.')
 
-                self.driver.switch_to.alert.accept()\
+                self.driver.switch_to.alert.accept()
         except:
             print "No alert"
 
