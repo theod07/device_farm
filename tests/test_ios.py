@@ -42,6 +42,7 @@ KIOSK_URL = 'https://facility-manage-stage.herokuapp.com/book/g1a41z'
 QUICKCARE_DALLAS_URL = 'https://stage.solvhealth.com/-g1a41z'
 WAITLIST_URL = 'https://stage.solvhealth.com/b'
 DAPI_QA_HOST = 'https://facility-dapi-qa.herokuapp.com'
+STAGE_QUICKCARE_WAITLIST = 'https://stage.solvhealth.com/l/100000'
 
 if SCREENSHOT_FOLDER == '/tmp':
     SLEEP_TIME = LOCAL_SLEEP_TIME
@@ -55,10 +56,18 @@ class WebViewIOSTests(unittest.TestCase):
         # # set up appium
         sleep(10)
         desired_caps = {}
+
+        # iOS Capabilities
         desired_caps['platformName'] = 'iOS'
         desired_caps['platformVersion'] = '8.3'
         desired_caps['deviceName'] = 'iPhone 5'
-        desired_caps['autoAcceptAlerts'] = 'True'
+
+        # for Android Capabilities
+        # desired_caps['platformName'] = 'Android'
+        # desired_caps['platformVersion'] = '4.4'
+        # desired_caps['deviceName'] = 'Android Emulator'
+
+        # desired_caps['autoAcceptAlerts'] = 'True'
         desired_caps['newCommandTimeout'] = 0
         # desired_caps['deviceName'] = 'iPhone Simulator'
 
@@ -249,9 +258,16 @@ class WebViewIOSTests(unittest.TestCase):
         sleep(3)
         self.driver.find_element_by_class_name('_25eB').click()
 
+        # accept system & browser location notifications
+        sleep(2)
+        self.driver.switch_to.alert.accept()
+        sleep(2)
+        self.driver.switch_to.alert.accept()
+
         # wait for search results to load
         sleep(10)
         screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
 
         # Currently serving Dallas-Fort Worth.
         # Same-day appointments coming soon near you!
