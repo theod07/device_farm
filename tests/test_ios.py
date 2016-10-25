@@ -260,12 +260,14 @@ class WebViewIOSTests(unittest.TestCase):
 
         # accept system & browser location notifications
         try:
-            sleep(2)
-            self.driver.switch_to.alert.accept()
-            sleep(2)
-            self.driver.switch_to.alert.accept()
-        except NoAlertPresentException:
-            print "No alert open"
+            for alert in ['first', 'second']:
+                WebDriverWait(self.driver, 3).until(EC.alert_is_present(),
+                                                    'Timed out waiting for PA creation ' +
+                                                    'confirmation popup to appear.')
+
+                self.driver.switch_to.alert.accept()\
+        except:
+            print "No alert"
 
 
         # wait for search results to load
