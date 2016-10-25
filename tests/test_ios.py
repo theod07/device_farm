@@ -39,7 +39,7 @@ SOLVHEALTH_URL = 'http://www.solvhealth.com'
 STAGE_SOLVHEALTH_URL = 'https://stage.solvhealth.com'
 QUICKCARE_WELCOME_URL = 'https://facility-manage-stage.herokuapp.com/welcome/g1a41z'
 KIOSK_URL = 'https://facility-manage-stage.herokuapp.com/book/g1a41z'
-QUICKCARE_DALLAS_URL = 'https://stage.solvhealth.com/-100000'
+QUICKCARE_DALLAS_URL = 'https://stage.solvhealth.com/-g1a41z'
 WAITLIST_URL = 'https://stage.solvhealth.com/b'
 DAPI_QA_HOST = 'https://facility-dapi-qa.herokuapp.com'
 
@@ -144,7 +144,7 @@ class WebViewIOSTests(unittest.TestCase):
 
         assert 'Finalize' in self.driver.page_source
 
-    def t_2_kiosk_badnumber(self):
+    def test_2_kiosk_badnumber(self):
         TEST_NAME = '2_kiosk_badnumber'
         screenshot_count = 0
 
@@ -216,8 +216,20 @@ class WebViewIOSTests(unittest.TestCase):
 
         assert 'Success' in self.driver.title
 
-    def test_3_waitlist(self):
-        TEST_NAME = '3_waitlist'
+
+    def test_4_waitlist(self):
+        TEST_NAME = '4_waitlist'
+        screenshot_count = 0
+
+        self.driver.get(STAGE_QUICKCARE_WAITLIST)
+        sleep(1)
+        screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+        assert 'Live Waitlist by' in self.driver.page_source
+
+
+
+    def test_3_solvhealth(self):
+        TEST_NAME = '3_solvhealth'
         screenshot_count = 0
 
         self.driver.get(STAGE_SOLVHEALTH_URL)
@@ -232,11 +244,6 @@ class WebViewIOSTests(unittest.TestCase):
             sleep(1)
             screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
 
-            # click 'Next' button
-            self.driver.find_element_by_class_name('_382N').click()
-            sleep(1)
-            screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
-
         # enter symptoms
         self.driver.find_element_by_id('symptoms').send_keys('carpal tunnel')
         sleep(3)
@@ -245,6 +252,12 @@ class WebViewIOSTests(unittest.TestCase):
         # wait for search results to load
         sleep(10)
         screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
+
+        # Currently serving Dallas-Fort Worth.
+        # Same-day appointments coming soon near you!
+        # Click Dallas-Fort Worth
+        self.driver.find_element_by_class_name('_1u5O').click()
+        sleep(2)
 
         # click adult/kid filter
         self.driver.find_elements_by_class_name('_20Mk')[0]\
@@ -263,7 +276,7 @@ class WebViewIOSTests(unittest.TestCase):
                     .find_element_by_tag_name('a').click()
         sleep(1)
         screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
-        assert 'Use current location' in self.driver.page_source
+        assert 'City or ZIP code' in self.driver.page_source
 
 
         # go directly to Stage QuickCare CDP
