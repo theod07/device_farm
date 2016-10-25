@@ -1,5 +1,6 @@
 #!/bin/bash
 
+rm test_bundle.zip
 py.test --collect-only tests/
 
 read -rsp $'\nMake sure desired capabilities is empty.\n\tVerify your tests were collected, press any key to continue or CTRL+C to abort.\n' -n1 key
