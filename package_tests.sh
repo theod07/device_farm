@@ -17,3 +17,4 @@ pip freeze > requirements.txt
 pip wheel --wheel-dir wheelhouse -r requirements.txt
 
 ## Zip tests/, wheelhouse/, and requirements.txt into test_bundle.zip
+zip -r test_bundle.zip tests/ wheelhouse/ requirements.txt
