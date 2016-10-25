@@ -43,6 +43,7 @@ QUICKCARE_DALLAS_URL = 'https://stage.solvhealth.com/-g1a41z'
 WAITLIST_URL = 'https://stage.solvhealth.com/b'
 DAPI_QA_HOST = 'https://facility-dapi-qa.herokuapp.com'
 STAGE_QUICKCARE_WAITLIST = 'https://stage.solvhealth.com/l/100000'
+STAGE_OUTSIDE_SERVICE_AREA = 'https://stage.solvhealth.com/outsideServiceArea'
 
 if SCREENSHOT_FOLDER == '/tmp':
     SLEEP_TIME = LOCAL_SLEEP_TIME
@@ -258,7 +259,7 @@ class WebViewIOSTests(unittest.TestCase):
         sleep(3)
         self.driver.find_element_by_class_name('_25eB').click()
 
-        # accept system & browser location notifications
+        accept system & browser location notifications
         try:
             for alert in ['first', 'second']:
                 WebDriverWait(self.driver, 3).until(EC.alert_is_present(),
@@ -267,13 +268,15 @@ class WebViewIOSTests(unittest.TestCase):
 
                 self.driver.switch_to.alert.accept()
         except:
-            print "No alert"
+            pass
+        self.driver.get(STAGE_OUTSIDE_SERVICE_AREA)
 
 
         # wait for search results to load
         sleep(10)
         screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
 
+        # self.driver.get(STAGE_OUTSIDE_SERVICE_AREA)
 
         # Currently serving Dallas-Fort Worth.
         # Same-day appointments coming soon near you!
