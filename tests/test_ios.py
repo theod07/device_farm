@@ -259,7 +259,7 @@ class WebViewIOSTests(unittest.TestCase):
         sleep(3)
         self.driver.find_element_by_class_name('_25eB').click()
 
-        accept system & browser location notifications
+        # accept system & browser location notifications
         try:
             for alert in ['first', 'second']:
                 WebDriverWait(self.driver, 3).until(EC.alert_is_present(),
