@@ -259,10 +259,14 @@ class WebViewIOSTests(unittest.TestCase):
         self.driver.find_element_by_class_name('_25eB').click()
 
         # accept system & browser location notifications
-        sleep(2)
-        self.driver.switch_to.alert.accept()
-        sleep(2)
-        self.driver.switch_to.alert.accept()
+        try:
+            sleep(2)
+            self.driver.switch_to.alert.accept()
+            sleep(2)
+            self.driver.switch_to.alert.accept()
+        except NoAlertPresentException:
+            print "No alert open"
+
 
         # wait for search results to load
         sleep(10)
