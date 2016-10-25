@@ -121,7 +121,7 @@ class WebViewIOSTests(unittest.TestCase):
 
             screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
 
-        self.driver.find_element_by_id('symptoms').send_keys('carpal tunnel')
+        self.driver.find_element_by_id('symptoms').send_keys('solv test')
         sleep(1)
         self.driver.find_element_by_class_name('_25eB').click()
 
@@ -208,7 +208,7 @@ class WebViewIOSTests(unittest.TestCase):
         self.driver.find_element_by_id('lastName').send_keys('Do')
         self.driver.find_element_by_id('birthDate').send_keys('06/03/1989')
         self.driver.find_element_by_id('phone').send_keys('7148236827')
-        self.driver.find_element_by_id('reason').send_keys('carpal tunnel')
+        self.driver.find_element_by_id('reason').send_keys('solv test')
 
         screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
 
@@ -255,20 +255,20 @@ class WebViewIOSTests(unittest.TestCase):
             screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
 
         # enter symptoms
-        self.driver.find_element_by_id('symptoms').send_keys('carpal tunnel')
-        sleep(3)
-        self.driver.find_element_by_class_name('_25eB').click()
-
-        # accept system & browser location notifications
-        try:
-            for alert in ['first', 'second']:
-                WebDriverWait(self.driver, 3).until(EC.alert_is_present(),
-                                                    'Timed out waiting for PA creation ' +
-                                                    'confirmation popup to appear.')
-
-                self.driver.switch_to.alert.accept()
-        except:
-            pass
+        # self.driver.find_element_by_id('symptoms').send_keys('solv test')
+        # sleep(3)
+        # self.driver.find_element_by_class_name('_25eB').click()
+        # 
+        # # accept system & browser location notifications
+        # try:
+        #     for alert in ['first', 'second']:
+        #         WebDriverWait(self.driver, 3).until(EC.alert_is_present(),
+        #                                             'Timed out waiting for PA creation ' +
+        #                                             'confirmation popup to appear.')
+        #
+        #         self.driver.switch_to.alert.accept()
+        # except:
+        #     pass
         self.driver.get(STAGE_OUTSIDE_SERVICE_AREA)
 
 
@@ -414,7 +414,7 @@ class WebViewIOSTests(unittest.TestCase):
         self.driver.find_element_by_id('lastName').send_keys('Do')
         self.driver.find_element_by_id('birthDate').send_keys('06/03/1989')
         self.driver.find_element_by_id('phone').send_keys('7148236827')
-        self.driver.find_element_by_id('reason').send_keys('carpal tunnel')
+        self.driver.find_element_by_id('reason').send_keys('solv test')
 
         screenshot_count = self.save_screen(TEST_NAME, screenshot_count)
 
